@@ -1,0 +1,263 @@
+﻿<Download>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName></MDTFolderName>
+        <FullName>Test App without source</FullName>
+        <ShortName>appnosource</ShortName>
+        <Publisher>No pub</Publisher>
+        <Source></Source>
+        <DestinationFolder>\\server\share\folder</DestinationFolder>
+        <DestinationFile>app_no_source.exe</DestinationFile>
+        <URL></URL>
+        <CommandType>NONE</CommandType>
+        <Command>app_no_source.se</Command>
+        <CommandLineSwitches>/switches</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Productivity</MDTFolderName>
+        <FullName>Acrobat Reader DC 2017.012.20093</FullName>
+        <ShortName>AcrobatReaderDC201701220093</ShortName>
+        <Publisher>Acrobat</Publisher>
+        <Version>2017.012.20093</Version>
+        <Source>https://ardownload2.adobe.com/pub/adobe/reader/win/AcrobatDC/1701220093/AcroRdrDC1701220093_en_US.exe</Source>
+        <DestinationFolder>AcrobatReaderDC</DestinationFolder>
+        <DestinationFile>AcroRdrDC1701220093_en_US.exe</DestinationFile>
+        <CommandAfterDownload></CommandAfterDownload>
+        <CommandLineSwitchesAfterDownload></CommandLineSwitchesAfterDownload>
+        <URL>https://get.adobe.com/reader/</URL>
+        <CommandType></CommandType>
+        <Command>AcroRdrDC1701220093_en_US.exe</Command>
+        <CommandLineSwitches>/sPB /rs</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Productivity</MDTFolderName>
+        <FullName>Microsoft Office 365 ProPlus (2016)</FullName>
+        <ShortName>O365PP_2016</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Version>16.0.8529.3600</Version>
+        <Source>https://download.microsoft.com/download/2/7/A/27AF1BE6-DD20-4CB4-B154-EBAB8A7D4A7E/officedeploymenttool_8529.3600.exe</Source>
+        <DestinationFolder>O365PP_2016</DestinationFolder>
+        <DestinationFile>officedeploymenttool_8529.3600.exe</DestinationFile>
+        <CommandAfterDownload>officedeploymenttool_8529.3600.exe</CommandAfterDownload>
+        <CommandLineSwitchesAfterDownload>/extract:.\ /quiet</CommandLineSwitchesAfterDownload>
+        <URL>https://www.microsoft.com/en-us/download/details.aspx?id=49117</URL>
+        <CommandType>NONE</CommandType>
+        <Command>setup.exe</Command>
+        <CommandLineSwitches>/configure configuration.xml</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft Core Apps 2005 SP1 Redistributable Package (x86)</FullName>
+        <ShortName>VS2005X86SP1</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>http://download.microsoft.com/download/8/B/4/8B42259F-5D70-43F4-AC2E-4B208FD8D66A/vcredist_x86.EXE</Source>
+        <DestinationFolder>VS2005X86SP1</DestinationFolder>
+        <DestinationFile>vcredist_x86.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vcredist_x86.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft Core Apps 2005 SP1 Redistributable Package (x64)</FullName>
+        <ShortName>VS2005X64SP1</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>http://download.microsoft.com/download/8/B/4/8B42259F-5D70-43F4-AC2E-4B208FD8D66A/vcredist_x64.EXE</Source>
+        <DestinationFolder>VS2005X64SP1</DestinationFolder>
+        <DestinationFile>vcredist_x64.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vcredist_x64.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft Core Apps 2008 SP1 Redistributable Package (x86)</FullName>
+        <ShortName>VS2008X86SP1</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>http://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x86.exe</Source>
+        <DestinationFolder>VS2008X86SP1</DestinationFolder>
+        <DestinationFile>vcredist_x86.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vcredist_x86.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft Core Apps 2008 SP1 Redistributable Package (x64)</FullName>
+        <ShortName>VS2008X64SP1</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>http://download.microsoft.com/download/5/D/8/5D8C65CB-C849-4025-8E95-C3966CAFD8AE/vcredist_x64.exe</Source>
+        <DestinationFolder>VS2008X64SP1</DestinationFolder>
+        <DestinationFile>vcredist_x64.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vcredist_x64.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft Core Apps 2010 SP1 Redistributable Package (x86)</FullName>
+        <ShortName>VS2010X86SP1</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>http://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x86.exe</Source>
+        <DestinationFolder>VS2010X86SP1</DestinationFolder>
+        <DestinationFile>vcredist_x86.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vcredist_x86.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft Core Apps 2010 SP1 Redistributable Package (x64)</FullName>
+        <ShortName>VS2010X64SP1</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>http://download.microsoft.com/download/1/6/5/165255E7-1014-4D0A-B094-B6A430A6BFFC/vcredist_x64.exe</Source>
+        <DestinationFolder>VS2010X64SP1</DestinationFolder>
+        <DestinationFile>vcredist_x64.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vcredist_x64.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft Core Apps 2012 Update 4 Redistributable Package (x86)</FullName>
+        <ShortName>VS2012X86SP1</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x86.exe</Source>
+        <DestinationFolder>VS2012X86SP1</DestinationFolder>
+        <DestinationFile>vcredist_x86.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vcredist_x86.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft Core Apps 2012 Update 4 Redistributable Package (x64)</FullName>
+        <ShortName>VS2012X64SP1</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>http://download.microsoft.com/download/1/6/B/16B06F60-3B20-4FF2-B699-5E9B7962F9AE/VSU_4/vcredist_x64.exe</Source>
+        <DestinationFolder>VS2012X64SP1</DestinationFolder>
+        <DestinationFile>vcredist_x64.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vcredist_x64.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft Core Apps 2013 Redistributable Package (x86)</FullName>
+        <ShortName>VS2013X86</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x86.exe</Source>
+        <DestinationFolder>VS2013X86</DestinationFolder>
+        <DestinationFile>vcredist_x86.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vcredist_x86.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft Core Apps 2013 Redistributable Package (x64)</FullName>
+        <ShortName>VS2013X64</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>http://download.microsoft.com/download/2/E/6/2E61CFA4-993B-4DD4-91DA-3737CD5CD6E3/vcredist_x64.exe</Source>
+        <DestinationFolder>VS2013X64</DestinationFolder>
+        <DestinationFile>vcredist_x64.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vcredist_x64.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Visual C++ Redistributable for Visual Studio 2015 (x86)</FullName>
+        <ShortName>VS2015X86</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>https://download.microsoft.com/download/9/3/F/93FCF1E7-E6A4-478B-96E7-D4B285925B00/vc_redist.x86.exe</Source>
+        <DestinationFolder>VS2015X86</DestinationFolder>
+        <DestinationFile>vc_redist.x86.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vc_redist.x86.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Visual C++ Redistributable for Visual Studio 2015 (x64)</FullName>
+        <ShortName>VS2015X64</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>https://download.microsoft.com/download/9/3/F/93FCF1E7-E6A4-478B-96E7-D4B285925B00/vc_redist.x64.exe</Source>
+        <DestinationFolder>VS2015X64</DestinationFolder>
+        <DestinationFile>vc_redist.x64.exe</DestinationFile>
+        <URL>http://www.microsoft.com</URL>
+        <CommandType>NONE</CommandType>
+        <Command>vc_redist.x64.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft Silverlight 5 Build 5.1.41212.0 (x64)</FullName>
+        <ShortName>SL5141212X64</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>http://go.microsoft.com/fwlink/?LinkID=229321</Source>
+        <DestinationFolder>SilverLight51</DestinationFolder>
+        <DestinationFile>Silverlight_x64.exe</DestinationFile>
+        <URL>https://www.microsoft.com/getsilverlight/locale/en-us/html/Microsoft%20Silverlight%20Release%20History.htm</URL>
+        <CommandType>NONE</CommandType>
+        <Command>Silverlight_x64.exe</Command>
+        <CommandLineSwitches>/Q</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+    <DownloadItem>
+        <Comment></Comment>
+        <MDTFolderName>Microsoft Core Apps</MDTFolderName>
+        <FullName>Microsoft .NET Framework 4.5.2</FullName>
+        <ShortName>NetFramework452</ShortName>
+        <Publisher>Microsoft</Publisher>
+        <Source>https://download.microsoft.com/download/E/2/1/E21644B5-2DF2-47C2-91BD-63C560427900/NDP452-KB2901907-x86-x64-AllOS-ENU.exe</Source>
+        <DestinationFolder>NetFramework452</DestinationFolder>
+        <DestinationFile>NDP452-KB2901907-x86-x64-AllOS-ENU.exe</DestinationFile>
+        <URL>https://support.microsoft.com/en-us/kb/2901907</URL>
+        <CommandType>NONE</CommandType>
+        <Command>NDP452-KB2901907-x86-x64-AllOS-ENU.exe</Command>
+        <CommandLineSwitches>/Q /norestart</CommandLineSwitches>
+        <VerifyAfterCommand></VerifyAfterCommand>
+    </DownloadItem>
+</Download>
