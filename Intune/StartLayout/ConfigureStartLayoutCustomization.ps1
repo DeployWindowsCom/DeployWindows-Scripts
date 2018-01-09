@@ -100,7 +100,7 @@ $ScheduledScript = 'Start-Transcript -Path "' + $ScriptFolderFullPath + '\' + $S
   $Error.Clear()
   $UserProfile = Get-WmiObject -Class Win32_UserProfile -ComputerName Localhost -Filter "LocalPath like ''c:\\Users%''" | Sort LastUseTime -Descending  | select -First 1
   $UserProfile.Delete()
-  if ($Error.Count ge 1) { Unregister-ScheduledTask -TaskName "' + $ScheduledTaskName + '" -Confirm:$false -ErrorAction Continue }
+  if ($Error.Count -eq 0) { Unregister-ScheduledTask -TaskName "' + $ScheduledTaskName + '" -Confirm:$false -ErrorAction Continue }
 Stop-Transcript'
 
 $ScheduledTask = [xml]('<?xml version="1.0" encoding="UTF-16"?>
