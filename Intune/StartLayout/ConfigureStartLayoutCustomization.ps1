@@ -83,13 +83,6 @@ function ShowToast {
 }
 
 $ScheduledScript = 'Start-Transcript -Path ' + $ScriptFolderFullPath + '\' + $ScheduledScriptName + '.log -Append
-  #$LayoutModification = ''<LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" Version="1" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification">
-    <LayoutOptions StartTileGroupCellWidth="6" /><DefaultLayoutOverride LayoutCustomizationRestrictionType="OnlySpecifiedGroups">
-      <StartLayoutCollection><defaultlayout:StartLayout GroupCellWidth="6">
-        <start:Group Name="customizations">
-          <start:Tile AppUserModelID="Microsoft.MicrosoftEdge_8wekyb3d8bbwe!MicrosoftEdge" Size="2x2" Row="0" Column="0"/>
-        </start:Group></defaultlayout:StartLayout></StartLayoutCollection></DefaultLayoutOverride></LayoutModificationTemplate>''
-  #$LayoutModification | Out-File -FilePath "C:\users\default\appdata\Local\Microsoft\windows\shell\LayoutModification.xml"
   #Remove the last used profile
   $Error.Clear()
   #$UserProfile = Get-WmiObject -Class Win32_UserProfile -ComputerName Localhost -Filter "LocalPath=''c:\\Users\\Mattias''"
