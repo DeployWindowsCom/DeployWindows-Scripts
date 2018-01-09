@@ -164,7 +164,7 @@ if ($ScriptAlreadyExecuted -eq $empty) {
 }
 
 New-Item -ItemType Directory -Path $ScriptFolderFullPath -Force -ErrorAction SilentlyContinue | Out-Null
-$ScheduledScript | Out-File -FilePath "$($ScriptFolderFullPath)\' + $ScheduledScriptName + '" -Force
+$ScheduledScript | Out-File -FilePath "$($ScriptFolderFullPath)\$($ScheduledScriptName)" -Force
 Register-ScheduledTask -Xml $ScheduledTask.OuterXml  -TaskName $ScheduledTaskName
 
 # Create a registy value to ensure not rerun by mistake
@@ -183,7 +183,7 @@ if ($ForceRestart) {
   Start-Sleep -Seconds $ForceRestartTimeout
   Restart-Computer -Force
 } else {
-  ShowToast -ToastTitle "$($ScheduledTaskName) installed" -ToastText "Please computer as soon as possible!" -ToastDuration long
+  ShowToast -ToastTitle "$($ScheduledTaskName) installed" -ToastText "Please restart computer as soon as possible!" -ToastDuration long
 }
 
 #Always return true
