@@ -1,3 +1,24 @@
+﻿<#
+.Synopsis
+  When deploying Office 365 ProPlus to a Windows 10 signature edition there is a Home Premium version installed
+  and therefore Office 365 PP cannot be installed.
+  This script will execute the uninstall command for all Office 365 HomePremRetail version and languages installed on the computer
+.DESCRIPTION
+  This script restart in 64-bit environment
+  Look in the Uninstall key for all installed Office 365 Home Prem Retail versions/languages
+  For 
+
+  To configure the script define the variables
+  Only change other settings if you know what you are doing
+.EXAMPLE
+  Upload the script to Microsoft Intune, run in system context and apply to all users
+.AUTHOR
+  Reach the author
+  https://deploywindows.com
+  @MattiasFors
+#>
+
+Param([switch]$Is64Bit = $false)
 
 #region User defined variables
 $UninstallRegistryFilter = "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\O365HomePremRetail*"
@@ -5,8 +26,6 @@ $LogFile = "UninstallOffice365Home.log"
 $ScriptFolder = "DeployWindows"
 $ScriptFolderFullPath = "$($Env:ProgramData)\$($ScriptFolder)"
 #endregion
-
-Param([switch]$Is64Bit = $false)
  
 Function Restart-As64BitProcess {
     If ([System.Environment]::Is64BitProcess) { return }
@@ -23,7 +42,7 @@ if (!$Is64Bit) {
     #region Script require running in 64-bit environment
     Start-Transcript "$($ScriptFolderFullPath)\$($LogFile)"
 
-    $Programs = @(Get-Item -Path $UninstallRegistryFilter)
+    $Programs = @(Get-Item -Path $UninstallRegistryFilter)
     Write-Host "Found $($Programs.Count) Programs from $($Programs[0].PSPath) with the filter $($UninstallRegistryFilter)"
 
     foreach ($Program in $Programs) {

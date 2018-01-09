@@ -1,4 +1,4 @@
-
+﻿
 Param([switch]$Is64Bit = $false)
  
 Function Restart-As64BitProcess {
