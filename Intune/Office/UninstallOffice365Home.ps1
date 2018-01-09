@@ -1,6 +1,6 @@
 
 #region User defined variables
-$UninstallRegistryFilter = "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\O365HomePremPlus*"
+$UninstallRegistryFilter = "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\O365HomePremRetail*"
 $LogFile = "UninstallOffice365Home.log"
 $ScriptFolder = "DeployWindows"
 $ScriptFolderFullPath = "$($Env:ProgramData)\$($ScriptFolder)"
@@ -15,8 +15,7 @@ Function Restart-As64BitProcess {
     $sysNativePath = $psHome.ToLower().Replace("syswow64", "sysnative")
     Start-Process "$sysNativePath\powershell.exe" -ArgumentList "-ex bypass -file `"$Invocation`" -Is64Bit" -WindowStyle Hidden -Wait
 }
- 
- 
+
 if (!$Is64Bit) { 
     Restart-As64BitProcess 
 } else {
@@ -46,11 +45,9 @@ if (!$Is64Bit) {
             $ps.start()
             $ps.WaitForExit()
         }
-
-        break;
-
-        #endregion
     }
-
     Stop-Transcript
+
+    #endregion
 }
+
