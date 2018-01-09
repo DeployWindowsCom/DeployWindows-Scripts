@@ -95,15 +95,13 @@ function ShowToast {
   }
 }
 
-$ScheduledScript = 'Start-Transcript -Path ' + $ScriptFolderFullPath + '\' + $ScheduledScriptName + '.log -Append
+$ScheduledScript = 'Start-Transcript -Path "' + $ScriptFolderFullPath + '\' + $ScheduledScriptName + '.log" -Append
   #Remove the last used profile
   $Error.Clear()
-  #$UserProfile = Get-WmiObject -Class Win32_UserProfile -ComputerName Localhost -Filter "LocalPath=''c:\\Users\\Mattias''"
   $UserProfile = Get-WmiObject -Class Win32_UserProfile -ComputerName Localhost -Filter "LocalPath like ''c:\\Users%''" | Sort LastUseTime -Descending  | select -First 1
   $UserProfile.Delete()
   if ($Error.Count ge 1) { Unregister-ScheduledTask -TaskName "' + $ScheduledTaskName + '" -Confirm:$false -ErrorAction Continue }
 Stop-Transcript'
-
 
 $ScheduledTask = [xml]('<?xml version="1.0" encoding="UTF-16"?>
 <Task version="1.4" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
