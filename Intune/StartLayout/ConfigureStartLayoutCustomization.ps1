@@ -1,16 +1,29 @@
-﻿
-$ScriptFolder = "$($Env:ProgramData)\DeployWindows";
-$ScheduledScriptName = "ConfigureStartLayoutCustomization.ps1";
-$ScheduledTaskName = "ConfigureStartLayoutCustomization";
+﻿<#
+.Synopsis
+   Remove last used profile
+.DESCRIPTION
+   This script is used to clean user start layout
+.EXAMPLE
+   Example of how to use this cmdlet
+.EXAMPLE
+   Another example of how to use this cmdlet
+#>
+
+$ScriptFolder = "DeployWindows"
+$ScheduledScriptName = "ConfigureStartLayoutCustomization.ps1"
+$ScheduledTaskName = "ConfigureStartLayoutCustomization"
+$ScriptFolderFullPath = "$($Env:ProgramData)\$($ScriptFolder)"
+$ScriptRegistryPath = "HKLM:\SOFTWARE\$($ScriptFolder)"
+$ScriptRegistryResultName = "$($ScheduledTaskName)Result"
 
 function ShowToast {
   param(
-    [parameter(Mandatory=$true,Position=1)]
-    [string] $Image,
     [parameter(Mandatory=$true,Position=2)]
     [string] $ToastTitle,
     [parameter(Mandatory=$true,Position=3)]
     [string] $ToastText,
+    [parameter(Position=1)]
+    [string] $Image = $null,
     [parameter()]
     [ValidateSet('long','short')]
     [string] $ToastDuration = "long"
@@ -19,29 +32,35 @@ function ShowToast {
   # Toasts templates: https://msdn.microsoft.com/en-us/library/windows/apps/hh761494.aspx
   [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
 
+  # Define Toast template, w/wo image
+  $ToastTemplate = [Windows.UI.Notifications.ToastTemplateType]::ToastImageAndText02
+  if ($Image.Length -le 0) {
+    $ToastTemplate = [Windows.UI.Notifications.ToastTemplateType]::ToastText02
+  }
+
   # Download or define a local image file://c:/image.png
   # Toast images must have dimensions =< 1024x1024 size =< 200 KB
   if ($Image -match "http*") {
     [System.Reflection.Assembly]::LoadWithPartialName("System.web") | Out-Null
-    $Image = [System.Web.HttpUtility]::UrlEncode($Image);
-    $imglocal = "$($env:TEMP)\ToastImage.png";
-    Start-BitsTransfer -Destination $imglocal -Source $([System.Web.HttpUtility]::UrlDecode($Image)) -ErrorAction Continue;
+    $Image = [System.Web.HttpUtility]::UrlEncode($Image)
+    $imglocal = "$($env:TEMP)\ToastImage.png"
+    Start-BitsTransfer -Destination $imglocal -Source $([System.Web.HttpUtility]::UrlDecode($Image)) -ErrorAction Continue
   } else {
-    $imglocal = $Image;
+    $imglocal = $Image
   }
 
   # Define the toast template and create variable for XML manipuration
   # Customize the toast title, text, image and duration
   $toastXml = [xml] $([Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent(`
-    [Windows.UI.Notifications.ToastTemplateType]::ToastImageAndText02)).GetXml();
+    $ToastTemplate)).GetXml()
   $toastXml.GetElementsByTagName("text")[0].AppendChild($toastXml.CreateTextNode($ToastTitle)) | Out-Null
   $toastXml.GetElementsByTagName("text")[1].AppendChild($toastXml.CreateTextNode($ToastText)) | Out-Null
-  $toastXml.GetElementsByTagName("image")[0].SetAttribute("src", $imglocal);
-  $toastXml.toast.SetAttribute("duration", $ToastDuration);
+  if ($Image.Length -ge 1) { $toastXml.GetElementsByTagName("image")[0].SetAttribute("src", $imglocal) }
+  $toastXml.toast.SetAttribute("duration", $ToastDuration)
 
   # Convert back to WinRT type
   $xml = New-Object Windows.Data.Xml.Dom.XmlDocument; $xml.LoadXml($toastXml.OuterXml);
-  $toast = [Windows.UI.Notifications.ToastNotification]::new($xml);
+  $toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
 
   # Get an unique AppId from start, and enable notification in registry
   if ([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value.ToString() -eq "S-1-5-18") {
@@ -54,30 +73,30 @@ function ShowToast {
       $return = $wshell.Popup($ToastText,4,$ToastTitle,0x100)
     }
   } else {
-    $AppID = ((Get-StartApps -Name 'Windows Powershell') | Select -First 1).AppId;
+    $AppID = ((Get-StartApps -Name 'Windows Powershell') | Select -First 1).AppId
     New-Item "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\$AppID" -Force | Out-Null
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\$AppID" `
       -Name "ShowInActionCenter" -Type Dword -Value "1" -Force | Out-Null
     # Create and show the toast, dont forget AppId
-    [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($AppID).Show($Toast);
+    [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($AppID).Show($Toast)
   }
 }
 
-$ScheduledScript = 'Start-Transcript -Path ' + $ScriptFolder + '\' + $ScheduledScriptName + '.log -Append
+$ScheduledScript = 'Start-Transcript -Path ' + $ScriptFolderFullPath + '\' + $ScheduledScriptName + '.log -Append
   #$LayoutModification = ''<LayoutModificationTemplate xmlns:defaultlayout="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" xmlns:start="http://schemas.microsoft.com/Start/2014/StartLayout" Version="1" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification">
     <LayoutOptions StartTileGroupCellWidth="6" /><DefaultLayoutOverride LayoutCustomizationRestrictionType="OnlySpecifiedGroups">
       <StartLayoutCollection><defaultlayout:StartLayout GroupCellWidth="6">
         <start:Group Name="customizations">
           <start:Tile AppUserModelID="Microsoft.MicrosoftEdge_8wekyb3d8bbwe!MicrosoftEdge" Size="2x2" Row="0" Column="0"/>
-        </start:Group></defaultlayout:StartLayout></StartLayoutCollection></DefaultLayoutOverride></LayoutModificationTemplate>'';
+        </start:Group></defaultlayout:StartLayout></StartLayoutCollection></DefaultLayoutOverride></LayoutModificationTemplate>''
   #$LayoutModification | Out-File -FilePath "C:\users\default\appdata\Local\Microsoft\windows\shell\LayoutModification.xml"
   #Remove the last used profile
-  $Error.Clear();
+  $Error.Clear()
   #$UserProfile = Get-WmiObject -Class Win32_UserProfile -ComputerName Localhost -Filter "LocalPath=''c:\\Users\\Mattias''"
   $UserProfile = Get-WmiObject -Class Win32_UserProfile -ComputerName Localhost -Filter "LocalPath like ''c:\\Users%''" | Sort LastUseTime -Descending  | select -First 1
   $UserProfile.Delete()
   if ($Error.Count ge 1) { Unregister-ScheduledTask -TaskName "' + $ScheduledTaskName + '" -Confirm:$false -ErrorAction Continue }
-Stop-Transcript';
+Stop-Transcript'
 
 
 $ScheduledTask = [xml]('<?xml version="1.0" encoding="UTF-16"?>
@@ -127,18 +146,30 @@ $ScheduledTask = [xml]('<?xml version="1.0" encoding="UTF-16"?>
   <Actions Context="Author">
     <Exec>
       <Command>powershell.exe</Command>
-      <Arguments>-ExecutionPolicy ByPass "' + $ScriptFolder + '\' + $ScheduledScriptName + '"</Arguments>
+      <Arguments>-ExecutionPolicy ByPass "' + $ScriptFolderFullPath + '\' + $ScheduledScriptName + '"</Arguments>
     </Exec>
   </Actions>
-</Task>');
+</Task>')
 
-New-Item -ItemType Directory -Path $ScriptFolder -ErrorAction SilentlyContinue | Out-Null
-$ScheduledScript | Out-File -FilePath "$($ScriptFolder)\' + $ScheduledScriptName + '" -Force
+$ScriptAlreadyExecuted = Get-ItemProperty -Path $ScriptRegistryPath -Name $ScriptRegistryResultName -ErrorAction SilentlyContinue
+if ($ScriptAlreadyExecuted -eq $empty) {
+  #Do nothing, the script has never run before
+} else {
+  Write-Output "Stopping script: The script has already run"
+  break 0
+}
+
+New-Item -ItemType Directory -Path $ScriptFolderFullPath -Force -ErrorAction SilentlyContinue | Out-Null
+$ScheduledScript | Out-File -FilePath "$($ScriptFolderFullPath)\' + $ScheduledScriptName + '" -Force
 Register-ScheduledTask -Xml $ScheduledTask.OuterXml  -TaskName $ScheduledTaskName
 
-# Example images from https://picsum.photos/
-ShowToast -Image "https://picsum.photos/150/150?image=1060" -ToastTitle "Profile script installed" `
-    -ToastText "Text generated: $([DateTime]::Now.ToShortTimeString())" -ToastDuration short;
+# Create a registy value to ensure not rerun by mistake
+New-Item -ItemType Directory -Path $ScriptRegistryPath -Force -ErrorAction SilentlyContinue | Out-Null
+New-ItemProperty -Path $ScriptRegistryPath -Name $ScriptRegistryResultName -Value 1 -PropertyType DWORD -Force -ErrorAction SilentlyContinue  | Out-Null
 
-#Always return true 
+# Example images from https://picsum.photos/
+ShowToast -ToastTitle "Profile script installed" `
+    -ToastText "Text generated: $([DateTime]::Now.ToShortTimeString())" -ToastDuration short
+
+#Always return true
 0
