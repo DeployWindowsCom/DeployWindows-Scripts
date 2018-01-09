@@ -1,20 +1,31 @@
 ﻿<#
 .Synopsis
-   Remove last used profile
+  When using Windows 10 and Microsoft Intune a partial locked Start Layout will all default icons to show  
+  This script will run once on each computer directly after enrollment and remove the last used profile
+  and the Start Layout will be nice and clean
 .DESCRIPTION
-   This script is used to clean user start layout
+  This script will remove the last used profile on the computer with a scheduled task, and notify the user when the script has run
+  To configure the script define the variables
+  Only change other settings if you know what you are doing
 .EXAMPLE
-   Example of how to use this cmdlet
-.EXAMPLE
-   Another example of how to use this cmdlet
+  Upload the script to Microsoft Intune, run in system context and apply to all users
+.AUTHOR
+  Reach the author
+  https://deploywindows.com
+  @MattiasFors
 #>
 
+#region User defined variables
 $ScriptFolder = "DeployWindows"
 $ScheduledScriptName = "ConfigureStartLayoutCustomization.ps1"
 $ScheduledTaskName = "ConfigureStartLayoutCustomization"
 $ScriptFolderFullPath = "$($Env:ProgramData)\$($ScriptFolder)"
 $ScriptRegistryPath = "HKLM:\SOFTWARE\$($ScriptFolder)"
 $ScriptRegistryResultName = "$($ScheduledTaskName)Result"
+$ForceRestart = $true
+$ForceRestartTimeout = 10
+$ResetIntuneManagementExtensionPolicies = $false
+#endregion
 
 function ShowToast {
   param(
@@ -28,6 +39,7 @@ function ShowToast {
     [ValidateSet('long','short')]
     [string] $ToastDuration = "long"
   )
+
   # Toast overview: https://msdn.microsoft.com/en-us/library/windows/apps/hh779727.aspx
   # Toasts templates: https://msdn.microsoft.com/en-us/library/windows/apps/hh761494.aspx
   [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
@@ -38,7 +50,7 @@ function ShowToast {
     $ToastTemplate = [Windows.UI.Notifications.ToastTemplateType]::ToastText02
   }
 
-  # Download or define a local image file://c:/image.png
+#region Download or define a local image file://c:/image.png
   # Toast images must have dimensions =< 1024x1024 size =< 200 KB
   if ($Image -match "http*") {
     [System.Reflection.Assembly]::LoadWithPartialName("System.web") | Out-Null
@@ -48,6 +60,7 @@ function ShowToast {
   } else {
     $imglocal = $Image
   }
+#endregion
 
   # Define the toast template and create variable for XML manipuration
   # Customize the toast title, text, image and duration
@@ -146,7 +159,7 @@ $ScheduledTask = [xml]('<?xml version="1.0" encoding="UTF-16"?>
 
 $ScriptAlreadyExecuted = Get-ItemProperty -Path $ScriptRegistryPath -Name $ScriptRegistryResultName -ErrorAction SilentlyContinue
 if ($ScriptAlreadyExecuted -eq $empty) {
-  #Do nothing, the script has never run before
+  # Script has never run, continue
 } else {
   Write-Output "Stopping script: The script has already run"
   break 0
@@ -160,9 +173,20 @@ Register-ScheduledTask -Xml $ScheduledTask.OuterXml  -TaskName $ScheduledTaskNam
 New-Item -ItemType Directory -Path $ScriptRegistryPath -Force -ErrorAction SilentlyContinue | Out-Null
 New-ItemProperty -Path $ScriptRegistryPath -Name $ScriptRegistryResultName -Value 1 -PropertyType DWORD -Force -ErrorAction SilentlyContinue  | Out-Null
 
-# Example images from https://picsum.photos/
-ShowToast -ToastTitle "Profile script installed" `
-    -ToastText "Text generated: $([DateTime]::Now.ToShortTimeString())" -ToastDuration short
+if ($ResetIntuneManagementExtensionPolicies) {
+  #This will make sure all Intune Management Extension Policies that already have run, will rerun after user logon
+  $IMEPolicyRegistryPath = "HKLM:\SOFTWARE\Microsoft\IntuneManagementExtension\Policies"
+  Remove-Item -Path $IMEPolicyRegistryPath -Recurse -Force -ErrorAction SilentlyContinue | Out-Null
+  New-Item -ItemType Directory -Path $IMEPolicyRegistryPath -Force -ErrorAction SilentlyContinue | Out-Null
+}
+
+if ($ForceRestart) {
+  ShowToast -ToastTitle "$($ScheduledTaskName) installed" -ToastText "Computer will restart within: $($ForceRestartTimeout)" -ToastDuration long
+  Start-Sleep -Seconds $ForceRestartTimeout
+  Restart-Computer -Force
+} else {
+  ShowToast -ToastTitle "$($ScheduledTaskName) installed" -ToastText "Please computer as soon as possible!" -ToastDuration long
+}
 
 #Always return true
 0
