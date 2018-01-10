@@ -1,4 +1,27 @@
-﻿
+﻿##############################
+#.SYNOPSIS
+#Show Windows Toast/ballon for a logged on user
+#
+#.PARAMETER ToastTitle
+#Parameter Title of the toast
+#
+#.PARAMETER ToastText
+#Parameter Text for the toast
+#
+#.PARAMETER Image
+#Parameter Define image either http://, https:// or file://
+#
+#.PARAMETER ToastDuration
+#Parameter Define how long the toast should stay, long or short, 10 or 4 seconds for alternative popup
+#
+#.EXAMPLE
+# ShowToast -Image "https://picsum.photos/150/150?image=1060" 
+#   -ToastTitle "Headline" -ToastText "Text" -ToastDuration short
+#
+#.NOTES
+#It will modify the registry value ShowInActionCenter to 1 for PowerShell
+# Location HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\$AppID
+##############################
 function ShowToast {
     param(
       [parameter(Mandatory=$true,Position=2)]
@@ -11,28 +34,21 @@ function ShowToast {
       [ValidateSet('long','short')]
       [string] $ToastDuration = "long"
     )
-  
     # Toast overview: https://msdn.microsoft.com/en-us/library/windows/apps/hh779727.aspx
     # Toasts templates: https://msdn.microsoft.com/en-us/library/windows/apps/hh761494.aspx
     [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
   
     # Define Toast template, w/wo image
     $ToastTemplate = [Windows.UI.Notifications.ToastTemplateType]::ToastImageAndText02
-    if ($Image.Length -le 0) {
-      $ToastTemplate = [Windows.UI.Notifications.ToastTemplateType]::ToastText02
-    }
+    if ($Image.Length -le 0) { $ToastTemplate = [Windows.UI.Notifications.ToastTemplateType]::ToastText02 }
   
-  #region Download or define a local image file://c:/image.png
-    # Toast images must have dimensions =< 1024x1024 size =< 200 KB
+    # Download or define a local image. Toast images must have dimensions =< 1024x1024 size =< 200 KB
     if ($Image -match "http*") {
       [System.Reflection.Assembly]::LoadWithPartialName("System.web") | Out-Null
       $Image = [System.Web.HttpUtility]::UrlEncode($Image)
       $imglocal = "$($env:TEMP)\ToastImage.png"
       Start-BitsTransfer -Destination $imglocal -Source $([System.Web.HttpUtility]::UrlDecode($Image)) -ErrorAction Continue
-    } else {
-      $imglocal = $Image
-    }
-  #endregion
+    } else { $imglocal = $Image }
   
     # Define the toast template and create variable for XML manipuration
     # Customize the toast title, text, image and duration
@@ -49,14 +65,10 @@ function ShowToast {
   
     # Get an unique AppId from start, and enable notification in registry
     if ([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value.ToString() -eq "S-1-5-18") {
-      # Popup alternative when running as system
-      # https://msdn.microsoft.com/en-us/library/x83z1d9f(v=vs.84).aspx
+      # Popup alternative when running as system. https://msdn.microsoft.com/en-us/library/x83z1d9f(v=vs.84).aspx
       $wshell = New-Object -ComObject Wscript.Shell
-      if ($ToastDuration -eq "long") {
-        $return = $wshell.Popup($ToastText,10,$ToastTitle,0x100)
-      } else {
-        $return = $wshell.Popup($ToastText,4,$ToastTitle,0x100)
-      }
+      if ($ToastDuration -eq "long") { $return = $wshell.Popup($ToastText,10,$ToastTitle,0x100) }
+      else { $return = $wshell.Popup($ToastText,4,$ToastTitle,0x100) }
     } else {
       $AppID = ((Get-StartApps -Name 'Windows Powershell') | Select -First 1).AppId
       New-Item "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\$AppID" -Force | Out-Null
@@ -69,6 +81,4 @@ function ShowToast {
   
 # Example images from https://picsum.photos/
 ShowToast -Image "https://picsum.photos/150/150?image=1060" -ToastTitle "title" `
-    -ToastText "Text generated: $([DateTime]::Now.ToShortTimeString())" -ToastDuration short;
-
-
+  -ToastText "Text generated: $([DateTime]::Now.ToShortTimeString())" -ToastDuration short;

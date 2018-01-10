@@ -18,8 +18,6 @@
   @MattiasFors
 #>
 
-Param([switch]$Is64Bit = $false)
-
 #region User defined variables
 $UninstallRegistryFilter = "HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\O365HomePremRetail*"
 $LogFile = "UninstallOffice365Home.log"
@@ -27,14 +25,23 @@ $ScriptFolder = "DeployWindows"
 $ScriptFolderFullPath = "$($Env:ProgramData)\$($ScriptFolder)"
 #endregion
 
+#region Restart into 64-bit
+$Is64Bit = [System.Environment]::Is64BitProcess;
+$Is64OS = $false; if (($env:PROCESSOR_ARCHITEW6432 -like "AMD64") -or ($env:PROCESSOR_ARCHITECTURE -like "AMD64")) { $Is64OS = $true; }
 
-Function Restart-As64BitProcess {
-    If ([System.Environment]::Is64BitProcess) { return }
-    $Invocation = $($MyInvocation.PSCommandPath)
+if (($Is64OS) -and (-not $Is64Bit)) {
+    # Running AMD64 but no AMD64 Process, Restart script
+    Write-Host "Running AMD64 OS and x86 environment, restart script"
+    $Invocation = $PSCommandPath
     if ($Invocation -eq $null) { return }
-    $sysNativePath = $psHome.ToLower().Replace("syswow64", "sysnative")
-    Start-Process "$sysNativePath\powershell.exe" -ArgumentList "-ex bypass -file `"$Invocation`" -Is64Bit" -WindowStyle Hidden -Wait
+    $SysNativePath = $PSHOME.ToLower().Replace("syswow64", "sysnative")
+    $Ret = Start-Process "$SysNativePath\powershell.exe" -ArgumentList "-ex ByPass -file `"$Invocation`" " -WindowStyle normal -PassThru -Wait
+    return $Ret.ExitCode;
+} elseif ((-not $Is64OS) -and (-not $Is64Bit)) {
+    #Running x86 and no AMD64 Process, Do not bother restarting
+    Write-Host "Running x86 OS and x86 environment, continue"
 }
+#endregion
 
 function ShowToast {
     param(
@@ -71,73 +78,69 @@ function ShowToast {
     }
   #endregion
   
-    # Define the toast template and create variable for XML manipuration
-    # Customize the toast title, text, image and duration
-    $toastXml = [xml] $([Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent(`
-      $ToastTemplate)).GetXml()
-    $toastXml.GetElementsByTagName("text")[0].AppendChild($toastXml.CreateTextNode($ToastTitle)) | Out-Null
-    $toastXml.GetElementsByTagName("text")[1].AppendChild($toastXml.CreateTextNode($ToastText)) | Out-Null
-    if ($Image.Length -ge 1) { $toastXml.GetElementsByTagName("image")[0].SetAttribute("src", $imglocal) }
-    $toastXml.toast.SetAttribute("duration", $ToastDuration)
-  
-    # Convert back to WinRT type
-    $xml = New-Object Windows.Data.Xml.Dom.XmlDocument; $xml.LoadXml($toastXml.OuterXml);
-    $toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
-  
-    # Get an unique AppId from start, and enable notification in registry
-    if ([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value.ToString() -eq "S-1-5-18") {
-      # Popup alternative when running as system
-      # https://msdn.microsoft.com/en-us/library/x83z1d9f(v=vs.84).aspx
-      $wshell = New-Object -ComObject Wscript.Shell
-      if ($ToastDuration -eq "long") {
-        $return = $wshell.Popup($ToastText,10,$ToastTitle,0x100)
-      } else {
-        $return = $wshell.Popup($ToastText,4,$ToastTitle,0x100)
-      }
+  # Define the toast template and create variable for XML manipuration
+  # Customize the toast title, text, image and duration
+  $toastXml = [xml] $([Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent(`
+    $ToastTemplate)).GetXml()
+  $toastXml.GetElementsByTagName("text")[0].AppendChild($toastXml.CreateTextNode($ToastTitle)) | Out-Null
+  $toastXml.GetElementsByTagName("text")[1].AppendChild($toastXml.CreateTextNode($ToastText)) | Out-Null
+  if ($Image.Length -ge 1) { $toastXml.GetElementsByTagName("image")[0].SetAttribute("src", $imglocal) }
+  $toastXml.toast.SetAttribute("duration", $ToastDuration)
+
+  # Convert back to WinRT type
+  $xml = New-Object Windows.Data.Xml.Dom.XmlDocument; $xml.LoadXml($toastXml.OuterXml);
+  $toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
+
+  # Get an unique AppId from start, and enable notification in registry
+  if ([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value.ToString() -eq "S-1-5-18") {
+    # Popup alternative when running as system
+    # https://msdn.microsoft.com/en-us/library/x83z1d9f(v=vs.84).aspx
+    $wshell = New-Object -ComObject Wscript.Shell
+    if ($ToastDuration -eq "long") {
+      $return = $wshell.Popup($ToastText,10,$ToastTitle,0x100)
     } else {
-      $AppID = ((Get-StartApps -Name 'Windows Powershell') | Select -First 1).AppId
-      New-Item "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\$AppID" -Force | Out-Null
-      Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\$AppID" `
-        -Name "ShowInActionCenter" -Type Dword -Value "1" -Force | Out-Null
-      # Create and show the toast, dont forget AppId
-      [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($AppID).Show($Toast)
+      $return = $wshell.Popup($ToastText,4,$ToastTitle,0x100)
     }
+  } else {
+    $AppID = ((Get-StartApps -Name 'Windows Powershell') | Select -First 1).AppId
+    New-Item "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\$AppID" -Force | Out-Null
+    Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\$AppID" `
+      -Name "ShowInActionCenter" -Type Dword -Value "1" -Force | Out-Null
+    # Create and show the toast, dont forget AppId
+    [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($AppID).Show($Toast)
   }
-  
-
-if (!$Is64Bit) { 
-    Restart-As64BitProcess 
-} else {
-
-    #region Script require running in 64-bit environment
-    Start-Transcript "$($ScriptFolderFullPath)\$($LogFile)"
-
-    $Programs = @(Get-Item -Path $UninstallRegistryFilter)
-    Write-Host "Found $($Programs.Count) Programs from $($Programs[0].PSPath) with the filter $($UninstallRegistryFilter)"
-    ShowToast -ToastTitle "Uninstalling applications" `
-        -ToastText "Found $($Programs.Count) Programs with filter $($UninstallRegistryFilter)" -ToastDuration short;
-
-    foreach ($Program in $Programs) {
-        $UninstallString = $empty
-        $UninstallString = $(Get-ItemPropertyValue -Path $Program.PSPath -Name "UninstallString" -ErrorAction SilentlyContinue)
-        if ($UninstallString -eq $empty) {
-            Write-Host "Missing uninstall command"
-        } else {
-            $cmd = $UninstallString.Substring(0,$UninstallString.IndexOf(".exe") + 5).Trim()
-            $args = $UninstallString.Substring($UninstallString.IndexOf(".exe") + 5).TrimStart()
-            Write-Host "Execute command: $($cmd)"
-            Write-Host "Parameters $($args)"
-
-            $ps = new-object System.Diagnostics.Process
-            $ps.StartInfo.Filename = $cmd
-            $ps.StartInfo.Arguments = $args
-            $ps.StartInfo.RedirectStandardOutput = $True
-            $ps.StartInfo.UseShellExecute = $false
-            $ps.start()
-            $ps.WaitForExit()
-        }
-    }
-    Stop-Transcript
-
-    #endregion
 }
+
+
+#region Require running in 64-bit environment
+
+Start-Transcript "$($ScriptFolderFullPath)\$($LogFile)"
+
+$Programs = @(Get-Item -Path $UninstallRegistryFilter)
+Write-Host "Found $($Programs.Count) Programs from $($Programs[0].PSPath) with the filter $($UninstallRegistryFilter)"
+ShowToast -ToastTitle "Uninstalling applications" `
+  -ToastText "Found $($Programs.Count) Programs with filter $($UninstallRegistryFilter)" -ToastDuration short;
+
+foreach ($Program in $Programs) {
+  $UninstallString = $empty
+  $UninstallString = $(Get-ItemPropertyValue -Path $Program.PSPath -Name "UninstallString" -ErrorAction SilentlyContinue)
+  if ($UninstallString -eq $empty) {
+    Write-Host "Missing uninstall command"
+  } else {
+    $cmd = $UninstallString.Substring(0,$UninstallString.IndexOf(".exe") + 5).Trim()
+    $args = $UninstallString.Substring($UninstallString.IndexOf(".exe") + 5).TrimStart()
+    Write-Host "Execute command: $($cmd)"
+    Write-Host "Parameters $($args)"
+
+    $ps = new-object System.Diagnostics.Process
+    $ps.StartInfo.Filename = $cmd
+    $ps.StartInfo.Arguments = $args
+    $ps.StartInfo.RedirectStandardOutput = $True
+    $ps.StartInfo.UseShellExecute = $false
+    $ps.start()
+    $ps.WaitForExit()
+  }
+}
+Stop-Transcript
+
+#endregion
