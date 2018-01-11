@@ -20,7 +20,7 @@
  #  Created:		2017-09-12
  #  Author:         Mattias Fors
  #                  @MattiasFors
- #                  http://www.deploywindows.info
+ #                  http://www.deploywindows.com
  # History:
  #  1.0             Created first version
  ##################################################################################

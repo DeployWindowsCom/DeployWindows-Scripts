@@ -21,9 +21,9 @@
 # // Prerequsits: Tested on Windows 10
 # //
 # // Source/References:
-# //   http://DeployWindows.info
+# //   http://DeployWindows.com
 # //   @MattiasFors
-# //   mattias@deploywindows.info
+# //   mattias@deploywindows.com
 # //
 # // History:
 # //	1.0		Created 

@@ -1,4 +1,24 @@
-﻿
+﻿##############################
+#.SYNOPSIS
+#This will restart your PowerShell script in 64-bit environment, on 64-bit OS only
+#Just paste this script at the top of your script
+#.EXAMPLE
+#N/A
+#
+#.NOTES
+#
+#Version
+# 1.0  First release
+#
+##############################
+
+##############################
+#Author
+#@MattiasFors
+#https://deploywindows.com
+#https://github.com/DeployWindowsCom/DeployWindows-Scripts
+##############################
+
 #region Restart into 64-bit
 $Is64Bit = [System.Environment]::Is64BitProcess;
 $Is64OS = $false; if (($env:PROCESSOR_ARCHITEW6432 -like "AMD64") -or ($env:PROCESSOR_ARCHITECTURE -like "AMD64")) { $Is64OS = $true; }

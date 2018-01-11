@@ -1,19 +1,27 @@
-﻿<#
-.Synopsis
-  When using Windows 10 and Microsoft Intune a partial locked Start Layout will all default icons to show  
-  This script will run once on each computer directly after enrollment and remove the last used profile
-  and the Start Layout will be nice and clean
-.DESCRIPTION
-  This script will remove the last used profile on the computer with a scheduled task, and notify the user when the script has run
-  To configure the script define the variables
-  Only change other settings if you know what you are doing
-.EXAMPLE
-  Upload the script to Microsoft Intune, run in system context and apply to all users
-.AUTHOR
-  Reach the author
-  https://deploywindows.com
-  @MattiasFors
-#>
+﻿##############################
+#.SYNOPSIS
+#When using Windows 10 and Microsoft Intune a partial locked Start Layout will all default icons to show  
+#This script will run once on each computer directly after enrollment and remove the last used profile
+#and the Start Layout will be nice and clean
+#.EXAMPLE
+#Upload the script to Microsoft Intune, run in system context and apply to all users
+#.NOTES
+#This script will remove the last used profile on the computer with a scheduled task, and notify the user when the script has run
+#To configure the script define the variables
+#Only change other settings if you know what you are doing
+#
+#Version
+# 1.0  First release
+#
+##############################
+
+##############################
+#Author
+#@MattiasFors
+#https://deploywindows.com
+#https://github.com/DeployWindowsCom/DeployWindows-Scripts
+##############################
+
 
 #region User defined variables
 $ScriptFolder = "DeployWindows"
