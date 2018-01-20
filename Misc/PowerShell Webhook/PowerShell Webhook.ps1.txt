@@ -1,0 +1,31 @@
+# Author @MattiasFors
+# Blog	 https://deploywindows.com
+
+#Create your sample message card here
+#https://messagecardplayground.azurewebsites.net/
+
+#Test send your message from postman
+#https://www.getpostman.com/
+
+
+
+# Implement this in your PowerShell to send a message to a Team
+# Change YOUR-ID to your ID
+
+
+Invoke-WebRequest -Uri "https://outlook.office.com/webhook/YOUR-ID" -Method Post -Body '{
+  "@context": "http://schema.org/extensions",
+  "@type": "MessageCard",
+  "themeColor": "0072C6",
+  "title": "My first test",
+  "text": "Why not **you** also test this thing?",
+  "potentialAction": [
+    {
+      "@type": "OpenUri",
+      "name": "Visit DeployWindows.com",
+      "targets": [
+        { "os": "default", "uri": "https://deploywindows.com" }
+      ]
+    }
+  ]
+}'
