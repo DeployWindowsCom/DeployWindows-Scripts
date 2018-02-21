@@ -29,6 +29,7 @@
 # //	1.0		Created 
 # //    1.1     Updated VHD Path to .\Virtual Hard Disks to follow standard
 # //    1.2     Updated with dropboxes instead of textboxes for CPU and VMSwitch
+# //    1.3     Fixes CPU, NIC does not work, tested on Insider 180x
 # //
 # // ***** End Header *****
 # // ***************************************************************************
@@ -42,8 +43,8 @@ $VMVHDXSize = 50GB
 $VMProcessorCount = 2
 $VMGeneration = 2
 #$VMBootDevice = "IDE, NetworkAdapter, CD"
-$VMNet1 = "Internal 2"
-$VMNet2 = "Internal 1"
+$VMNet1 = ""
+$VMNet2 = ""
 
 
 function Check-IsAdmin()
@@ -74,13 +75,12 @@ function Return-CreateVM {
     $global:VMMemory = [int64]($TextBox3.Text.ToString().ToUpper().Replace('GB','')) * ([int64](1GB))
     $global:VMVHDXSize = [int64]($TextBox4.Text.ToString().ToUpper().Replace('GB','')) * ([int64](1GB))
     $global:VMProcessorCount = $VMCPU.Items[$VMCPU.SelectedIndex]
-    $global:VMGeneration = $TextBox6.Text
+    $global:VMGeneration = $VMCPUGeneration.Text
     $global:VMNet1 = $VMNet1Name.Items[$VMNet1Name.SelectedIndex]
     $global:VMNet2 = $VMNet2Name.Items[$VMNet2Name.SelectedIndex]
 
 	$Form.Close()
 	Write-Host $global:VMName
-
 }
 
 function ShowDialogBox()
@@ -194,11 +194,11 @@ function ShowDialogBox()
     $DropDownLabel.Size = New-Object System.Drawing.Size(140,20) 
     $DropDownLabel.Text = "VM Generation"
     $Form.Controls.Add($DropDownLabel)
-    $TextBox6 = New-Object System.Windows.Forms.TextBox
-    $TextBox6.Location = New-Object System.Drawing.Size(150,240) 
-    $TextBox6.Size = New-Object System.Drawing.Size(100,20) 
-    $TextBox6.Text = $VMGeneration
-    $Form.Controls.Add($TextBox6)
+    $VMCPUGeneration = New-Object System.Windows.Forms.TextBox
+    $VMCPUGeneration.Location = New-Object System.Drawing.Size(150,240) 
+    $VMCPUGeneration.Size = New-Object System.Drawing.Size(100,20) 
+    $VMCPUGeneration.Text = $VMGeneration
+    $Form.Controls.Add($VMCPUGeneration)
     
     # VMNet1 Virtual Network Switch 1
     $DropDownLabel = New-Object System.Windows.Forms.Label
@@ -244,7 +244,6 @@ function ShowDialogBox()
 
     $Form.Add_Shown({$Form.Activate()})
     $Form.ShowDialog()
-
 }
 
 
@@ -256,7 +255,6 @@ if ( (check-isadmin).Equals($false) )
 
     [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
     [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
-
 
     $Form = New-Object System.Windows.Forms.Form
 
@@ -284,9 +282,8 @@ if ( (check-isadmin).Equals($false) )
 }
 else
 {
-    $DiaglogBoxReturn = ShowDialogBox
+    $DialogBoxReturn = ShowDialogBox
     $VMName = $global:VMName
-
     $VMPath = $global:VMPath
     $VMBootDVD = $global:VMBootDVD
     $VMMemory = $global:VMMemory
@@ -295,6 +292,8 @@ else
     $VMGeneration = $global:VMGeneration
     $VMNet1 = $global:VMNet1
     $VMNet2 = $global:VMNet2
+
+    Write-Host "CPU Count $($VMProcessorCount)"
 
     if (($VMName -ne $null) -and ($VMName.Length -gt 1))
     {
@@ -308,24 +307,22 @@ else
 #        New-VM -Name $VMName -MemoryStartupBytes $VMMemory -NewVHDPath $VMVHDXPath -NewVHDSizeBytes $VMVHDXSize -Path $VMPath -BootDevice $VMBootDevice -Generation $VMGeneration
         New-VM -Name $VMName -MemoryStartupBytes $VMMemory -NewVHDPath $VMVHDXPath -NewVHDSizeBytes $VMVHDXSize -Path $VMPath -Generation $VMGeneration
         Set-VMMemory -VMName $VMName -DynamicMemoryEnabled $true -MinimumBytes ($VMMemory/4) -MaximumBytes $VMMemory
-        Rename-VMNetworkAdapter -NewName "VMNet0" -VMName $VMName
-        $VMBootNet0 = Get-VMNetworkAdapter -VMName $VMName -Name "VMNet0"
+        Rename-VMNetworkAdapter -VMName $VMName -Name (Get-VMNetworkAdapter -VMName $VMName).Name -NewName "VMNet1"
+        $VMBootNet0 = Get-VMNetworkAdapter -VMName $VMName -Name "VMNet1"
         $VMHardDiskDrive1 = Get-VMHardDiskDrive $VMName
 
         #Add a default Boot.iso
-        Add-VMDvdDrive -VMName $VMName -Path $VMBootDVD
+        if ((Test-Path -Path $VMBootDVD) -eq $true) {
+            Add-VMDvdDrive -VMName $VMName -Path $VMBootDVD
+        } else {
+            Add-VMDvdDrive -VMName $VMName
+        }
         $VMDvdDrive = Get-VMDvdDrive -VMName $VMName -ControllerNumber 0 -ControllerLocation 1
 
         # Set processors
         Set-VM -Name $VMName -ProcessorCount $VMProcessorCount
 
         # Add extra NICs
-        if ($VMNet1.Length -gt 0) {
-            Add-VMNetworkAdapter -VMName $VMName -SwitchName $VMNet1 -Name "VMNet1" -IsLegacy $false 
-        }
-        else {
-            Add-VMNetworkAdapter -VMName $VMName -Name "VMNet1" -IsLegacy $false 
-        }
         if ($VMNet1.Length -gt 0) {
             Add-VMNetworkAdapter -VMName $VMName -SwitchName $VMNet2 -Name "VMNet2" -IsLegacy $false
         }
@@ -338,13 +335,9 @@ else
         
         #Add Boot to DVD, Harddisk and one of the NICs
         Set-VMFirmware -VMName $VMName -EnableSecureBoot On -PreferredNetworkBootProtocol IPv4 -BootOrder $VMDvdDrive, $VMHardDiskDrive1, $VMBootNet0, $VMBootNet1, $VMBootNet2
-
-
-        #Set-VMNetworkAdapter -VMName $VMName
     }
     else
     {
         Write-Host "Error or you cancelled"
-
     }
 }
