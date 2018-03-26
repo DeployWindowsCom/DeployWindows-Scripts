@@ -61,7 +61,7 @@ Process
 
 End {
     if ($ComputerName) {
-        Rename-Computer -NewName $ComputerName
+        #Rename-Computer -NewName $ComputerName
         Write-Host "Computer name is now changed"
     }
 }
