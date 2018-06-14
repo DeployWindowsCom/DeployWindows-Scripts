@@ -1,6 +1,6 @@
 ﻿<#PSScriptInfo
 
-.VERSION 1.0
+.VERSION 1.1
 
 .GUID 
 
@@ -26,6 +26,7 @@
 
 .RELEASENOTES
 Version 1.0:  Original
+Version 1.1:  Updated log information
 
 #>
 
@@ -49,20 +50,20 @@ Process
     $SerialNumber = (Get-WmiObject Win32_BIOS -Property SerialNumber).SerialNumber
 
     if ($SerialNumber) {
-        Write-Host "I found this serial number $($SerialNumber)"
+        Write-Host "BIOS S/N $($SerialNumber)."
         $ComputerName = $SerialNumber.Replace("\","").Replace("/","").Replace(":","").Replace("*","").Replace("?","").Replace("`"","").Replace("<","").Replace(">","").Replace("|","")
     
         if ($ComputerName.Length -gt 15) {
             $ComputerName = $SerialNumber.SubString(0,15)
         }
-        Write-Host "After some translation, this is the computername I want to set: $($ComputerName)"
+        Write-Host "S/N trimmed to $($ComputerName)."
     }
 }
 
 End {
     if ($ComputerName) {
-        #Rename-Computer -NewName $ComputerName
-        Write-Host "Computer name is now changed"
+        Rename-Computer -NewName $ComputerName | Out-Null
+        Write-Host "Computer name changed, you need to restart"
     }
 }
 
