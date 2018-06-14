@@ -52,6 +52,7 @@ $upn = Get-ItemPropertyValue -path HKLM:\SOFTWARE\Microsoft\IdentityStore\Cache\
 
 Write-Host "User information: "
 Write-Host $username.username
+if ($username.username.IndexOf("\") -gt 0) { Write-Host $username.username.Split("\")[0] }
 if ($username.username.IndexOf("\") -gt 0) { Write-Host $username.username.Split("\")[1] }
 Write-Host $sid.Value
 Write-Host $upn
