@@ -35,7 +35,8 @@ Automatically maps drives
 
 .DESCRIPTION
 This script will map drives and create network share in NetHood.
-The Script will rerun until it is successfull and mapped the drive letter AND created the network share.
+The Script will rerun until it is successfull and mapped the drive letter AND created the network share
+The script will log information in Event log in the source EventSystem, with ID 10, 11, 12	
 
 .EXAMPLE
 
