@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- (c) 2018 Deploywindows.com / Mattias Fors -->
+<policyDefinitions revision="1.0" schemaVersion="1.0">
+  <policyNamespaces>
+    <target prefix="officecustom" namespace="Officecustom.deploywindows" />
+    <using prefix="windows" namespace="Microsoft.Policies.Windows" />
+  </policyNamespaces>
+  <resources minRequiredRevision="1.0" />
+  <categories>
+    <category name="C_Office15" displayName="$(string.C_Office15_category)"/>
+    <category name="C_Office16" displayName="$(string.C_Office16_category)"/>
+  </categories>
+  <policies>
+    <policy name="DisableFileFmtPrompt15" class="User" displayName="$(string.L_ShownFileFmtPrompt15)" explainText="$(string.L_ShownFileFmtPrompt15_help)" key="Software\Microsoft\Office\15.0\Common\General" valueName="ShownFileFmtPrompt">
+      <parentCategory ref="C_Office15" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+	<policy name="BootedRTM15" class="User" displayName="$(string.L_BootedRTM15)" explainText="$(string.L_BootedRTM15_help)" key="Software\Microsoft\Office\15.0\FirstRun" valueName="BootedRTM">
+      <parentCategory ref="C_Office15" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+	<policy name="disablemovie15" class="User" displayName="$(string.L_disablemovie15)" explainText="$(string.L_disablemovie15_help)" key="Software\Microsoft\Office\15.0\FirstRun" valueName="disablemovie">
+      <parentCategory ref="C_Office15" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+	<policy name="shownfirstrunoptin15" class="User" displayName="$(string.L_shownfirstrunoptin15)" explainText="$(string.L_shownfirstrunoptin15_help)" key="Software\Microsoft\Office\15.0\Common\General" valueName="shownfirstrunoptin">
+      <parentCategory ref="C_Office15" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+	<policy name="PTWOptIn15" class="User" displayName="$(string.L_PTWOptIn15)" explainText="$(string.L_PTWOptIn15_help)" key="Software\Microsoft\Office\15.0\Common\PTWatson" valueName="PTWOptIn">
+      <parentCategory ref="C_Office15" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+	<policy name="qmenable15" class="User" displayName="$(string.L_qmenable15)" explainText="$(string.L_qmenable15_help)" key="Software\Microsoft\Office\15.0\Common" valueName="qmenable">
+      <parentCategory ref="C_Office15" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+
+	
+<!-- Office 16 -->
+    <policy name="DisableFileFmtPrompt16" class="User" displayName="$(string.L_ShownFileFmtPrompt16)" explainText="$(string.L_ShownFileFmtPrompt16_help)" key="Software\Microsoft\Office\16.0\Common\General" valueName="ShownFileFmtPrompt">
+      <parentCategory ref="C_Office16" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+	<policy name="BootedRTM16" class="User" displayName="$(string.L_BootedRTM16)" explainText="$(string.L_BootedRTM16_help)" key="Software\Microsoft\Office\16.0\FirstRun" valueName="BootedRTM">
+      <parentCategory ref="C_Office16" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+	<policy name="disablemovie16" class="User" displayName="$(string.L_disablemovie16)" explainText="$(string.L_disablemovie16_help)" key="Software\Microsoft\Office\16.0\FirstRun" valueName="disablemovie">
+      <parentCategory ref="C_Office16" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+	<policy name="shownfirstrunoptin16" class="User" displayName="$(string.L_shownfirstrunoptin16)" explainText="$(string.L_shownfirstrunoptin16_help)" key="Software\Microsoft\Office\16.0\Common\General" valueName="shownfirstrunoptin">
+      <parentCategory ref="C_Office16" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+	<policy name="PTWOptIn16" class="User" displayName="$(string.L_PTWOptIn16)" explainText="$(string.L_PTWOptIn16_help)" key="Software\Microsoft\Office\16.0\Common\PTWatson" valueName="PTWOptIn">
+      <parentCategory ref="C_Office16" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+	<policy name="qmenable16" class="User" displayName="$(string.L_qmenable16)" explainText="$(string.L_qmenable16_help)" key="Software\Microsoft\Office\16.0\Common" valueName="qmenable">
+      <parentCategory ref="C_Office16" />
+      <supportedOn ref="windows:SUPPORTED_Windows7" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+
+
+  </policies>
+</policyDefinitions>

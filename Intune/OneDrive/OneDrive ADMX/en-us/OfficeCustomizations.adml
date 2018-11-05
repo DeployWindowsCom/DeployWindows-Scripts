@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- (c) 2018 Deploywindows.com / Mattias Fors -->
+<policyDefinitionResources xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions">
+  <displayName>Office Customizations</displayName>
+  <description>Various group policy settings for unmanaged Microsoft Office settings. Build for version 15 and 16.</description>
+  <resources>
+    <stringTable>
+      <!-- categories -->
+	  <string id="C_Office15_category">Office 15 Customizations</string>
+	  <string id="C_Office16_category">Office 16 Customizations</string>
+
+      <!-- Office 15 -->
+      <string id="L_ShownFileFmtPrompt15">Disable Office 15.0 default file type</string>
+      <string id="L_ShownFileFmtPrompt15_help">Enable this setting to hide the question for Default File type.
+This automatically choose Office Open XML-format instead of OpenDocument-format
+</string>
+      <string id="L_BootedRTM15">Disable Office First Run on application boot</string>
+      <string id="L_BootedRTM15_help">This policy setting determines whether the Office First Run comes up on first application boot if not previously viewed.If you enable this policy setting,  the Office First Run does not run on first application boot.If you disable or do not configure this policy setting, the Office First Run about signing-in to Office comes up on first application boot if not previously viewed.
+</string>
+      <string id="L_disablemovie15">Disable First Run Movie</string>
+      <string id="L_disablemovie15_help">This policy setting determines whether a video about signing-in to Office is played when Office first runs.If you enable this policy setting, the video does not run during Office First Run.If you disable or do not configure this policy setting, a video about signing-in to Office plays when Office first runs.
+</string>
+      <string id="L_shownfirstrunoptin15">Disable Opt-in Wizard on first run</string>
+      <string id="L_shownfirstrunoptin15_help">This policy setting controls whether users see the Opt-in Wizard the first time they run a Microsoft Office 2013 application. If you enable this policy setting, the Opt-in Wizard does not display the first time users run an Office 2013 application. If you disable or do not configure this policy setting, the Opt-in Wizard displays the first time users run a Microsoft Office 2013 application, which allows them to opt into Internet--based services that will help improve their Office experience, such as Microsoft Update, the Customer Experience Improvement Program, Office Diagnostics, and Online Help.
+</string>
+      <string id="L_PTWOptIn15">Improve Proofing Tools</string>
+      <string id="L_PTWOptIn15_help">This policy setting controls whether the Help Improve Proofing Tools feature sends usage data to Microsoft. The Help Improve Proofing Tools feature collects data about use of the Proofing Tools, such as additions to the custom dictionary, and sends it to Microsoft. After about six months, the feature stops sending data to Microsoft and deletes the data collection file from the user's computer. If you enable this policy setting, this feature is enabled if users choose to participate in the Customer Experience Improvement Program (CEIP). If your organization has policies that govern the use of external resources such as the CEIP, allowing the use of the Help Improve Proofing Tools feature might cause them to violate these policies. If you disable this policy setting, the Help Improve Proofing Tools feature does not collect proofing tool usage information and transmit it to Microsoft. If you do not configure this policy setting, the behavior is the equivalent of setting the policy to "Enabled".
+</string>
+      <string id="L_qmenable15">Enable Customer Experience Improvement Program</string>
+      <string id="L_qmenable15_help">This policy setting controls whether users can participate in the Microsoft Office Customer Experience Improvement Program to help improve Microsoft Office. When users choose to participate in the Customer Experience Improvement Program (CEIP), Office 2013 applications automatically send information to Microsoft about how the applications are used. This information is combined with other CEIP data to help Microsoft solve problems and to improve the products and features customers use most often. This feature does not collect users' names, addresses, or any other identifying information except the IP address that is used to send the data. If you enable this policy setting, users have the opportunity to opt into participation in the CEIP the first time they run an Office application. If your organization has policies that govern the use of external resources such as the CEIP, allowing users to opt in to the program might cause them to violate these policies. If you disable this policy setting, Office 2013 users cannot participate in the Customer Experience Improvement Program. If you do not configure this policy setting, the behavior is the equivalent of setting the policy to "Enabled".
+</string>
+
+
+	  <!-- Office 16 -->
+      <string id="L_ShownFileFmtPrompt16">Disable Office 16.0 default file type</string>
+      <string id="L_ShownFileFmtPrompt16_help">Enable this setting to hide the question for Default File type. 
+This automatically choose Office Open XML-format instead of OpenDocument-format
+</string>
+      <string id="L_BootedRTM16">Disable Office First Run on application boot</string>
+      <string id="L_BootedRTM16_help">This policy setting determines whether the Office First Run comes up on first application boot if not previously viewed.If you enable this policy setting,  the Office First Run does not run on first application boot.If you disable or do not configure this policy setting, the Office First Run about signing-in to Office comes up on first application boot if not previously viewed.
+</string>
+      <string id="L_disablemovie16">Disable First Run Movie</string>
+      <string id="L_disablemovie16_help">This policy setting determines whether a video about signing-in to Office is played when Office first runs.If you enable this policy setting, the video does not run during Office First Run.If you disable or do not configure this policy setting, a video about signing-in to Office plays when Office first runs.
+</string>
+      <string id="L_shownfirstrunoptin16">Disable Opt-in Wizard on first run</string>
+      <string id="L_shownfirstrunoptin16_help">This policy setting controls whether users see the Opt-in Wizard the first time they run a Microsoft Office 2016 application. If you enable this policy setting, the Opt-in Wizard does not display the first time users run an Office 2016 application. If you disable or do not configure this policy setting, the Opt-in Wizard displays the first time users run a Microsoft Office 2016 application, which allows them to opt into Internet--based services that will help improve their Office experience, such as Microsoft Update, the Customer Experience Improvement Program, Office Diagnostics, and Online Help.
+</string>
+      <string id="L_PTWOptIn16">Improve Proofing Tools</string>
+      <string id="L_PTWOptIn16_help">This policy setting controls whether the Help Improve Proofing Tools feature sends usage data to Microsoft. The Help Improve Proofing Tools feature collects data about use of the Proofing Tools, such as additions to the custom dictionary, and sends it to Microsoft. After about six months, the feature stops sending data to Microsoft and deletes the data collection file from the user's computer. If you enable this policy setting, this feature is enabled if users choose to participate in the Customer Experience Improvement Program (CEIP). If your organization has policies that govern the use of external resources such as the CEIP, allowing the use of the Help Improve Proofing Tools feature might cause them to violate these policies. If you disable this policy setting, the Help Improve Proofing Tools feature does not collect proofing tool usage information and transmit it to Microsoft. If you do not configure this policy setting, the behavior is the equivalent of setting the policy to "Enabled".
+</string>
+      <string id="L_qmenable16">Enable Customer Experience Improvement Program</string>
+      <string id="L_qmenable16_help">This policy setting controls whether users can participate in the Microsoft Office Customer Experience Improvement Program to help improve Microsoft Office. When users choose to participate in the Customer Experience Improvement Program (CEIP), Office 2016 applications automatically send information to Microsoft about how the applications are used. This information is combined with other CEIP data to help Microsoft solve problems and to improve the products and features customers use most often. This feature does not collect users' names, addresses, or any other identifying information except the IP address that is used to send the data. If you enable this policy setting, users have the opportunity to opt into participation in the CEIP the first time they run an Office application. If your organization has policies that govern the use of external resources such as the CEIP, allowing users to opt in to the program might cause them to violate these policies. If you disable this policy setting, Office 2016 users cannot participate in the Customer Experience Improvement Program. If you do not configure this policy setting, the behavior is the equivalent of setting the policy to "Enabled".
+</string>
+
+	  </stringTable>
+  </resources>
+</policyDefinitionResources>
