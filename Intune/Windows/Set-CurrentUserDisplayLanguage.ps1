@@ -1,4 +1,4 @@
-##############################
+﻿##############################
 #.SYNOPSIS
 # Change display Language for the current user and show a notification that it will require restart
 #
@@ -56,27 +56,25 @@ function ShowToast {
   $toast = [Windows.UI.Notifications.ToastNotification]::new($xml)
 
   # Get an unique AppId from start, and enable notification in registry
-  if ([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value.ToString() -eq "S-1-5-18") {
-    # Popup alternative when running as system. https://msdn.microsoft.com/en-us/library/x83z1d9f(v=vs.84).aspx
-    $wshell = New-Object -ComObject Wscript.Shell
-    if ($ToastDuration -eq "long") { $return = $wshell.Popup($ToastText,10,$ToastTitle,0x100) }
-    else { $return = $wshell.Popup($ToastText,4,$ToastTitle,0x100) }
-  } else {
     $AppID = ((Get-StartApps -Name 'Windows Powershell') | Select -First 1).AppId
     New-Item "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\$AppID" -Force | Out-Null
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\$AppID" `
       -Name "ShowInActionCenter" -Type Dword -Value "1" -Force | Out-Null
     # Create and show the toast, dont forget AppId
     [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier($AppID).Show($Toast)
-  }
 }
 
 #region Main Scripts
 
 Set-WinUILanguageOverride -Language sv-SE
 
+$Langs = Get-WinUserLanguageList
+Set-WinUserLanguageList ($Langs | ? { $_.EnglishName -eq "Swedish"}) -Force
+
+
 ShowToast -ToastTitle "Språk ändrat" `
   -ToastText "IT Support har ändrat ditt språk, du behöver starta om datorn för att se förändringen" -ToastDuration long;
+
 
 #endregion
   
