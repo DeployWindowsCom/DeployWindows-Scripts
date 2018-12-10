@@ -25,7 +25,7 @@ if (($Is64OS) -and (-not $Is64Bit)) {
     $Invocation = $PSCommandPath
     if ($Invocation -eq $null) { return }
     $SysNativePath = $PSHOME.ToLower().Replace("syswow64", "sysnative")
-    $Ret = Start-Process "$SysNativePath\powershell.exe" -ArgumentList "-ex ByPass -file `"$Invocation`" " -WindowStyle Hidden -PassThru -Wait -RedirectStandardOutput $(Out-Host)
+    $Ret = Start-Process "$SysNativePath\powershell.exe" -ArgumentList "-ex ByPass -file `"$Invocation`" " -WindowStyle Hidden -PassThru -Wait
     return $Ret.ExitCode;
 } elseif ((-not $Is64OS) -and (-not $Is64Bit)) {
     #Running x86 and no AMD64 Process, Do not bother restarting
@@ -40,8 +40,14 @@ if((Test-Path -Path $TelemetryReg) -eq $false) {
     New-Item -Path $TelemetryReg -ItemType Key
 }
 
-New-ItemProperty -Path $TelemetryReg -Name AllowDeviceNameInTelemetry -PropertyType DWord -Value 1 -Force -ErrorAction Continue
-New-ItemProperty -Path $TelemetryReg -Name DisableTelemetryOptInChangeNotification -PropertyType DWord -Value 1 -Force -ErrorAction Continue
-New-ItemProperty -Path $TelemetryReg -Name DoNotShowFeedbackNotifications -PropertyType DWord -Value 1 -Force -ErrorAction Continue
+try {
+    New-ItemProperty -Path $TelemetryReg -Name AllowDeviceNameInTelemetry -PropertyType DWord -Value 1 -Force -ErrorAction Stop
+    New-ItemProperty -Path $TelemetryReg -Name DisableTelemetryOptInChangeNotification -PropertyType DWord -Value 1 -Force -ErrorAction Stop
+    New-ItemProperty -Path $TelemetryReg -Name DoNotShowFeedbackNotifications -PropertyType DWord -Value 1 -Force -ErrorAction Stop
+} catch {
+    Write-Error "Error"
+    Exit -1
+}
+
 
 #endregion
