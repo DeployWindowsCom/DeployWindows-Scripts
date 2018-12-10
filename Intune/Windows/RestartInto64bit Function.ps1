@@ -25,7 +25,6 @@ $Is64OS = $false; if (($env:PROCESSOR_ARCHITEW6432 -like "AMD64") -or ($env:PROC
 
 if (($Is64OS) -and (-not $Is64Bit)) {
     # Running AMD64 but no AMD64 Process, Restart script
-    Write-Host "Running AMD64 OS and x86 environment, restart script"
     $Invocation = $PSCommandPath
     if ($Invocation -eq $null) { return }
     $SysNativePath = $PSHOME.ToLower().Replace("syswow64", "sysnative")
@@ -33,13 +32,16 @@ if (($Is64OS) -and (-not $Is64Bit)) {
     return $Ret.ExitCode;
 } elseif ((-not $Is64OS) -and (-not $Is64Bit)) {
     #Running x86 and no AMD64 Process, Do not bother restarting
-    Write-Host "Running x86 OS and x86 environment, continue"
 }
 #endregion
 
 #region Your content goes here
 
-Write-Host "64-Bit Environment: $($Is64Bit) on 64-Bit Windows: $($Is64OS)"
+Start-Transcript -Path "$($env:TEMP)\log.log" -Append -Force
+
+#put your content here
+
+Stop-Transcript
 
 #endregion
 
