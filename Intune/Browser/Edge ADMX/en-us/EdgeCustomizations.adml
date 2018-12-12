@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- (c) 2018 Deploywindows.com / Mattias Fors -->
+<policyDefinitionResources xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" schemaVersion="1.0" xmlns="http://www.microsoft.com/GroupPolicy/PolicyDefinitions">
+  <displayName>Microsoft Edge Customizations</displayName>
+  <description>Various group policy settings for unmanaged Microsoft Edge settings</description>
+  <resources>
+    <stringTable>
+      <!-- categories -->
+	  <string id="C_Edge_category">Microsoft Edge Customizations</string>
+
+      <!-- Microsoft Edge -->
+      <string id="L_DisableEdgeDesktopShortcutCreation">Prevent Edge Desktop Shortcut creation</string>
+      <string id="L_DisableEdgeDesktopShortcutCreation_help">Enable this setting to prevent Edge shortcut on desktop
+</string>
+
+
+
+	  </stringTable>
+  </resources>
+</policyDefinitionResources>

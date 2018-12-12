@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- (c) 2018 Deploywindows.com / Mattias Fors -->
+<policyDefinitions revision="1.0" schemaVersion="1.0">
+  <policyNamespaces>
+    <target prefix="edgecustom" namespace="Edgecustom.deploywindows" />
+    <using prefix="windows" namespace="Microsoft.Policies.Windows" />
+  </policyNamespaces>
+  <resources minRequiredRevision="1.0" />
+  <categories>
+    <category name="C_Edge" displayName="$(string.C_Edge_category)"/>
+  </categories>
+  <policies>
+    <policy name="DisableEdgeDesktopShortcutCreation" class="Machine" displayName="$(string.L_DisableEdgeDesktopShortcutCreation)" explainText="$(string.L_DisableEdgeDesktopShortcutCreation_help)" key="SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer" valueName="DisableEdgeDesktopShortcutCreation">
+      <parentCategory ref="C_Edge" />
+      <supportedOn ref="windows:SUPPORTED_Windows10" />
+      <enabledValue>
+        <decimal value="1" />
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0" />
+      </disabledValue>
+    </policy>
+
+
+  </policies>
+</policyDefinitions>
