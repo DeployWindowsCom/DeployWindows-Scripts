@@ -1,0 +1,7 @@
+./Device/Vendor/MSFT/Policy/ConfigOperations/ADMXInstall/Windows/Policy/WindowsCustomizationsAdmx
+String
+content from admx
+
+./Device/Vendor/MSFT/Policy/Config/Windows~Policy~C_Edge/DisableEdgeDesktopShortcutCreation
+String
+<enabled/>

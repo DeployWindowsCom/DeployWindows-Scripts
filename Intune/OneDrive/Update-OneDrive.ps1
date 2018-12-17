@@ -38,7 +38,7 @@ This script will help users to simplify the OneDrive upgrade and logon process
 
 
 .EXAMPLE
-.\ProvisionOneDrive.ps1
+.\Update-OneDrive.ps1
 
 #>
 

@@ -2,7 +2,7 @@
 <!-- (c) 2018 Deploywindows.com / Mattias Fors -->
 <policyDefinitions revision="1.0" schemaVersion="1.0">
   <policyNamespaces>
-    <target prefix="edgecustom" namespace="Edgecustom.deploywindows" />
+    <target prefix="windowscustom" namespace="Windowscustom.deploywindows" />
     <using prefix="windows" namespace="Microsoft.Policies.Windows" />
   </policyNamespaces>
   <resources minRequiredRevision="1.0" />
@@ -20,7 +20,6 @@
         <decimal value="0" />
       </disabledValue>
     </policy>
-
 
   </policies>
 </policyDefinitions>

@@ -52,16 +52,18 @@ $ScriptName = $PSCommandPath.Split("\")[$PSCommandPath.Split("\").Count -1];
 Start-Transcript -Path "$($env:TEMP)\$($ScriptName).log" -Force
 
 
-$ErrorActionPreference = 'Stop';
+#put your content here and do some error handling
+$ErrorActionPreference = Stop;
 try {
-    Backup-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId "$(@(((Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector | Where-Object { $_.KeyProtectorType -eq "RecoveryPassword" })[0]).KeyProtectorId)"
+    # Put some stuff here
 
 } catch {
-    $Err = $_.Exception
-    Write-Error -Message "`n$($Err.GetType()) `n$($Err.Message)" -Category OperationStopped
-    
+    $ErrorMessage = $_.Exception.Message
+    $ErrorCode = $_.Exception.ExitCode
+    Write-Error "$($ErrorCode) with error $($ErrorMessage)"
 }
 
 
 Stop-Transcript
 #endregion Main script
+

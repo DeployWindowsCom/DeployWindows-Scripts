@@ -26,22 +26,39 @@ $Is64OS = $false; if (($env:PROCESSOR_ARCHITEW6432 -like "AMD64") -or ($env:PROC
 if (($Is64OS) -and (-not $Is64Bit)) {
     # Running AMD64 but no AMD64 Process, Restart script
     $Invocation = $PSCommandPath
-    if ($Invocation -eq $null) { return }
+    if ($null -eq $Invocation) { return }
     $SysNativePath = $PSHOME.ToLower().Replace("syswow64", "sysnative")
     $Ret = Start-Process "$SysNativePath\powershell.exe" -ArgumentList "-ex ByPass -file `"$Invocation`" " -WindowStyle normal -PassThru -Wait
-    return $Ret.ExitCode;
+    $Ret.WaitForExit()
+    Write-Error -Message "Exit with error"
+    Exit $Ret.ExitCode;
 } elseif ((-not $Is64OS) -and (-not $Is64Bit)) {
     #Running x86 and no AMD64 Process, Do not bother restarting
 }
 #endregion
 
-#region Your content goes here
+#region Main script here
+$ScriptName = $PSCommandPath.Split("\")[$PSCommandPath.Split("\").Count -1];
+Start-Transcript -Path "$($env:TEMP)\$($ScriptName).log" -Force
 
-Start-Transcript -Path "$($env:TEMP)\log.log" -Append -Force
 
-#put your content here
+#Put your content here
+
+#exit with this if error
+Exit -1
+
+#try catch sample
+$ErrorActionPreference = Stop;
+try {
+    # Put some stuff here
+
+} catch {
+    $ErrorMessage = $_.Exception.Message
+    $ErrorCode = $_.Exception.ExitCode
+    Write-Error "$($ErrorCode) with error $($ErrorMessage)"
+}
+
+
 
 Stop-Transcript
-
 #endregion
-
