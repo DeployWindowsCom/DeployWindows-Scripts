@@ -23,7 +23,7 @@ Start-Transcript -Path "$($env:TEMP)\$($ScriptName).log" -Append -Force
 
 
 try {
-    Backup-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId "1$(@(((Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector | Where-Object { $_.KeyProtectorType -eq "RecoveryPassword" })[0]).KeyProtectorId)" -ErrorAction Stop
+    Backup-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId "$(@(((Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector | Where-Object { $_.KeyProtectorType -eq "RecoveryPassword" })[0]).KeyProtectorId)" -ErrorAction Stop
         
 }
 catch {
