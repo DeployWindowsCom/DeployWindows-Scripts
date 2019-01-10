@@ -58,20 +58,32 @@ $Is64OS = $false; if (($env:PROCESSOR_ARCHITEW6432 -like "AMD64") -or ($env:PROC
 
 if (($Is64OS) -and (-not $Is64Bit)) {
     # Running AMD64 but no AMD64 Process, Restart script
-    Write-Host "Running AMD64 OS and x86 environment, restart script"
     $Invocation = $PSCommandPath
-    if ($Invocation -eq $null) { return }
+    if ($null -eq $Invocation) { return }
     $SysNativePath = $PSHOME.ToLower().Replace("syswow64", "sysnative")
-    $Ret = Start-Process "$SysNativePath\powershell.exe" -ArgumentList "-ex ByPass -file `"$Invocation`" " -WindowStyle hidden -PassThru -Wait
-    return $Ret.ExitCode;
+    $pinfo = New-Object System.Diagnostics.ProcessStartInfo
+    $pinfo.FileName = "$SysNativePath\powershell.exe"
+    $pinfo.RedirectStandardError = $true
+    $pinfo.RedirectStandardOutput = $true
+    $pinfo.UseShellExecute = $false
+    $pinfo.WindowStyle = "hidden"
+    $pinfo.Arguments = "-ex ByPass -file `"$Invocation`" "
+    $proc = New-Object System.Diagnostics.Process
+    $proc.StartInfo = $pinfo
+    $proc.Start() | Out-Null
+    $proc.WaitForExit()
+    $StdErr = $proc.StandardError.ReadToEnd()
+    $StdOut = $proc.StandardOutput.ReadToEnd()
+    $ExitCode = $proc.ExitCode
+    if ($StdErr) { Write-Error -Message "$($StdErr)" }
+    Write-Host $ExitCode
+    Exit $ExitCode
 } elseif ((-not $Is64OS) -and (-not $Is64Bit)) {
     #Running x86 and no AMD64 Process, Do not bother restarting
-    Write-Host "Running x86 OS and x86 environment, continue"
 }
 #endregion
 
 #region Main
-Write-Host "64-Bit Environment: $($Is64Bit) on 64-Bit Windows: $($Is64OS)"
 Start-Transcript -Path (Join-Path $env:TEMP "AutomateOneDrive.log") -Append -Force
 
 if (Test-Path $OneDriveRegistryKey) {
@@ -104,11 +116,10 @@ if ($OneDriveVersion -ge $MinimumOneDriveVersion) {
     Write-Host "Intialize an OneDrive upgrade..."
     $filepath =  (Join-Path $env:localappdata "Microsoft\OneDrive\OneDriveStandaloneUpdater.exe")
     if (-not (Test-Path  $filepath)) {
-        Write-Host "The file ($($filepath)) does not exist, exit the script with a exit code to make sure it runs again"
-        Exit 300
+    	Write-Error -Message "The file ($($filepath)) does not exist, exit the script with a exit code to make sure it runs again" -Category OperationStopped
     }
     Start-Process -FilePath $filepath -NoNewWindow -Wait
-#    Start-Sleep -Seconds 20
 }
+
 Stop-Transcript
 #endregion

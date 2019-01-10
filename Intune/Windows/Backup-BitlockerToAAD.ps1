@@ -7,7 +7,8 @@
 #.NOTES
 #
 #Version
-# 1.0  First release
+# 1.0 First release
+# 1.1 Some Logging added
 #
 ##############################
 #Author
@@ -54,8 +55,11 @@ Start-Transcript -Path "$($env:TEMP)\$($ScriptName).log" -Force
 
 $ErrorActionPreference = 'Stop';
 try {
-    Backup-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId "$(@(((Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector | Where-Object { $_.KeyProtectorType -eq "RecoveryPassword" })[0]).KeyProtectorId)"
-
+    if (((Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector | Where-Object { $_.KeyProtectorType -eq "RecoveryPassword" }) -eq $null) {
+        Write-Host "No BitLocker volume found, no backup needed"
+    } else {
+        Backup-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId "$(@(((Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector | Where-Object { $_.KeyProtectorType -eq "RecoveryPassword" })[0]).KeyProtectorId)"
+    }
 } catch {
     $Err = $_.Exception
     Write-Error -Message "`n$($Err.GetType()) `n$($Err.Message)" -Category OperationStopped
