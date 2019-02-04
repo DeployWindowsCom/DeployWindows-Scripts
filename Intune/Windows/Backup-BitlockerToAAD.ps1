@@ -58,7 +58,7 @@ try {
     if (((Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector | Where-Object { $_.KeyProtectorType -eq "RecoveryPassword" }) -eq $null) {
         Write-Host "No BitLocker volume found, no backup needed"
     } else {
-        Backup-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId "$(@(((Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector | Where-Object { $_.KeyProtectorType -eq "RecoveryPassword" })[0]).KeyProtectorId)"
+        BackupToAAD-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId "$(@(((Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector | Where-Object { $_.KeyProtectorType -eq "RecoveryPassword" })[0]).KeyProtectorId)"
     }
 } catch {
     $Err = $_.Exception
