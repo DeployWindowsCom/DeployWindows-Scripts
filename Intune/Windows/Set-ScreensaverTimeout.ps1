@@ -5,6 +5,7 @@
 #
 #Version
 # 1.0  First release
+# 1.1  Update for all users, and setting ScreenSaverIsSecure
 #
 ##############################
 
@@ -53,24 +54,35 @@ Start-Transcript -Path "$($env:TEMP)\$($ScriptName).log" -Force
 $SetHKU = $false    # This will configure the timeout when the user is logged out, logon screen
 $SetHKCU = $true    # This will configure the timeout when the user is logged in, group policy style
 
-$HKUReg = "HKU:\.DEFAULT\Control Panel\Desktop"                                 # This will configure the timeout when the user is logged out, logon screen
-$HKCUReg = "HKCU:\Software\Policies\Microsoft\Windows\Control Panel\Desktop"    # This will configure the timeout when the user is logged in, group policy style
+$HKUReg = "HKU:\.DEFAULT\Control Panel\Desktop"                                # This will configure the timeout when the user is logged out, logon screen
+$HKCURegBase = "\Software\Policies\Microsoft\Windows\Control Panel\Desktop"    # This will configure the timeout when the user is logged in, group policy style
 
 $TimeoutInSeconds = 15*60   # This is the timeout value in seconds
-
-if (((Test-Path -Path $HKUReg) -eq $false) -and (($SetHKU -eq $true))) { New-Item -Path $HKUReg -ItemType Key -Force }
-if (((Test-Path -Path $HKCUReg) -eq $false) -and (($SetHKCU -eq $true))) { New-Item -Path $HKCUReg -ItemType Key -Force }
+$ScreenSaverIsSecure = 1    # 1 = enable password after timeout, 0 disable require password
 
 $ErrorActionPreference = 'Stop';
 try {
-    if (($SetHKU -eq $true)) { New-ItemProperty -Path $HKUReg -Name ScreenSaveTimeOut -PropertyType String -Value $TimeoutInSeconds -Force -ErrorAction Stop }
-    if (($SetHKCU -eq $true)) {New-ItemProperty -Path $HKCUReg -Name ScreenSaveTimeOut -PropertyType String  -Value $TimeoutInSeconds -Force -ErrorAction Stop }
+    if ($SetHKU -eq $true) { 
+        if ((Test-Path -Path $HKUReg) -eq $false) { New-Item -Path $HKUReg -ItemType Key -Force -ErrorAction Stop }
+        New-ItemProperty -Path $HKUReg -Name ScreenSaveTimeOut -PropertyType String -Value $TimeoutInSeconds -Force -ErrorAction Stop
+    }
+
+    if ($SetHKCU -eq $true) {
+        $AllUsers = Get-ChildItem "Registry::\HKEY_USERS\" -ErrorAction SilentlyContinue| Where-Object { (($_.Name).Split("-").Count -ge 6) -and ($_.Name -notmatch "_Classes") }
+
+        foreach ($user in $AllUsers) {
+            $HKCUReg = "Registry::$($user.Name)$($HKCURegBase)"
+            Write-Host $HKCUReg
+            if ((Test-Path -Path $HKCUReg) -eq $false) { New-Item -Path $HKCUReg -ItemType Key -Force -ErrorAction Stop }
+            New-ItemProperty -Path $HKCUReg -Name ScreenSaveTimeOut -PropertyType String -Value $TimeoutInSeconds -Force -ErrorAction Stop
+            New-ItemProperty -Path $HKCUReg -Name ScreenSaverIsSecure -PropertyType String -Value $ScreenSaverIsSecure -Force -ErrorAction Stop
+        }
+    }
     # May require to run c:\windows\System32\RUNDLL32.EXE user32.dll,UpdatePerUserSystemParameters to enforce the setting now, else restart/logoff
 } catch {
     $Err = $_.Exception
-    Write-Error -Message "`n$($Err.GetType()) `n$($Err.Message)" -Category OperationStopped
+    Write-Error -Message "`n$($Err.GetType())" -Category OperationStopped
 }
-
 
 Stop-Transcript
 #endregion
