@@ -1,6 +1,6 @@
 ﻿<#PSScriptInfo
 
-.VERSION 1.0
+.VERSION 1.1
 
 .GUID 
 
@@ -26,6 +26,7 @@
 
 .RELEASENOTES
 Version 1.0:  Original
+Version 1.1: Updated for to install OneDrive for all users
 
 #>
 
@@ -43,14 +44,17 @@ This script will help users to simplify the OneDrive upgrade and logon process
 #>
 
 #if the installed version is less than this version, it will initialize an upgrade
-$MinimumOneDriveVersion = "18.091.0506"
+# Release info https://support.office.com/en-us/article/onedrive-release-notes-845dcf18-f921-435e-bf28-4e24b95e5fc0
+$MinimumOneDriveVersion = "19.043.0304.0003"
 
 $OneDriveUserFolder = $env:OneDrive
 $OneDriveAppFolder = $null
 $OneDriveVersion = $null
-$OneDriveRegistryKey = "HKCU:\Software\Microsoft\OneDrive"
+$OneDriveHKCURegistryKey = "HKCU:\Software\Microsoft\OneDrive"
+$OneDriveHKLMRegistryKey = "HKLM:\Software\Microsoft\OneDrive"
 $OneDriveRegistryVersion = "Version"
 $OneDriveRegistryCurrentVersionPath = "CurrentVersionPath"
+$OneDriveDownloadURI = "https://go.microsoft.com/fwlink/?linkid=2083517"
 
 #region Restart into 64-bit
 $Is64Bit = [System.Environment]::Is64BitProcess;
@@ -86,39 +90,51 @@ if (($Is64OS) -and (-not $Is64Bit)) {
 #region Main
 Start-Transcript -Path (Join-Path $env:TEMP "AutomateOneDrive.log") -Append -Force
 
-if (Test-Path $OneDriveRegistryKey) {
-    #Get current version for OneDrive application
-    if (Get-ItemProperty -Path $OneDriveRegistryKey -Name $OneDriveRegistryVersion -ErrorAction SilentlyContinue) {
-        $OneDriveVersion = Get-ItemPropertyValue -Path $OneDriveRegistryKey -Name $OneDriveRegistryVersion -ErrorAction SilentlyContinue
-        Write-Host "Found version: $($OneDriveVersion)"
-    } else {
-        $OneDriveVersion = $null
-        Write-Host "Error getting: $($OneDriveRegistryKey) $($OneDriveRegistryVersion)"
-    }
-
-    #Get current path for OneDrive application
-    if (Get-ItemProperty -Path $OneDriveRegistryKey -Name $OneDriveRegistryCurrentVersionPath -ErrorAction SilentlyContinue) {
-        $OneDriveAppFolder = Get-ItemPropertyValue -Path $OneDriveRegistryKey -Name $OneDriveRegistryCurrentVersionPath -ErrorAction SilentlyContinue
-        Write-Host "Found Folder $($OneDriveAppFolder)"
-    } else {
-        $OneDriveAppFolder = $null
-        Write-Host "Error getting: $($OneDriveRegistryKey) $($OneDriveRegistryCurrentVersionPath)"
-    }
+# Guessing OneDrive Folder
+$OneDriveAppFolder = $null
+if (Test-Path (Join-Path $env:localappdata "Microsoft\OneDrive\OneDrive.exe")) {
+    $OneDriveAppFolder = (Join-Path $env:localappdata "Microsoft\OneDrive")
+} else {
+    $OneDriveAppFolder = (Join-Path ${env:ProgramFiles(x86)} "Microsoft OneDrive")
+    Write-Host "Found folder $($OneDriveAppFolder)"
 }
+$OneDriveVersion = (Get-Item $(Join-Path $OneDriveAppFolder "OneDrive.exe")).VersionInfo.ProductVersion
 
 Write-Host "OneDrive version: $($OneDriveVersion)"
 Write-Host "OneDrive application folder: $($OneDriveAppFolder)"
 
-#Upgrade OneDrive if needed
-if ($OneDriveVersion -ge $MinimumOneDriveVersion) {
-    Write-Host "OneDrive client is up to date"
+#Need to escape these characters \ ( ) 
+if ($OneDriveAppFolder -match ((${env:ProgramFiles(x86)}).Replace("\","\\").Replace("(","\(").Replace(")","\)"))) {
+    Write-Host "Already installed in Program folder, $($OneDriveAppFolder)"
 } else {
-    Write-Host "Intialize an OneDrive upgrade..."
-    $filepath =  (Join-Path $env:localappdata "Microsoft\OneDrive\OneDriveStandaloneUpdater.exe")
-    if (-not (Test-Path  $filepath)) {
-    	Write-Error -Message "The file ($($filepath)) does not exist, exit the script with a exit code to make sure it runs again" -Category OperationStopped
+    #Upgrade OneDrive if needed
+    if ($OneDriveVersion -ge $MinimumOneDriveVersion) {
+        Write-Host "OneDrive client is up to date $($OneDriveVersion)"
+    } else {
+        Write-Host "Intialize an OneDrive upgrade..."
+        $filepath =  (Join-Path $env:localappdata "Microsoft\OneDrive\OneDriveStandaloneUpdater.exe")
+        if (-not (Test-Path  $filepath)) {
+            Write-Error -Message "The file ($($filepath)) does not exist, exit the script with a exit code to make sure it runs again" -Category OperationStopped
+        } 
+        Start-Process -FilePath $filepath -NoNewWindow -Wait
     }
-    Start-Process -FilePath $filepath -NoNewWindow -Wait
+
+    $OneDriveVersion = (Get-Item $(Join-Path $OneDriveAppFolder "OneDrive.exe")).VersionInfo.ProductVersion
+
+    #Check if version is updated, and if not already installed in Program files folder
+    if ($OneDriveVersion -ge $MinimumOneDriveVersion) {
+        Write-Host "OneDrive client is up to date $($OneDriveVersion), we can install in Program folder"
+        $OneDriveSetup = $(Join-Path $OneDriveAppFolder "$($OneDriveVersion)\OneDriveSetup.exe")
+    } else {
+        #Start download 
+        Write-Host "Starting download new OneDrive client"
+        Invoke-WebRequest -Uri $OneDriveDownloadURI -OutFile (Join-Path "$($env:TEMP)" "OneDriveSetup.exe")
+        Write-Host "Initialize OneDriveSetup with allusers argument..."
+        $OneDriveSetup = (Join-Path "$($env:TEMP)" "OneDriveSetup.exe")
+    }
+
+    Write-Host "Now time to install OneDrive in program folder $($OneDriveSetup) /allusers"
+    Start-Process -FilePath $OneDriveSetup -ArgumentList "/allusers" -NoNewWindow
 }
 
 Stop-Transcript
