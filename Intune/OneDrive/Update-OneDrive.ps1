@@ -91,14 +91,17 @@ if (($Is64OS) -and (-not $Is64Bit)) {
 Start-Transcript -Path (Join-Path $env:TEMP "AutomateOneDrive.log") -Append -Force
 
 # Guessing OneDrive Folder
-$OneDriveAppFolder = $null
 if (Test-Path (Join-Path $env:localappdata "Microsoft\OneDrive\OneDrive.exe")) {
     $OneDriveAppFolder = (Join-Path $env:localappdata "Microsoft\OneDrive")
-} else {
+} elseif (Test-Path (Join-Path ${env:ProgramFiles(x86)} "Microsoft OneDrive")) {
     $OneDriveAppFolder = (Join-Path ${env:ProgramFiles(x86)} "Microsoft OneDrive")
-    Write-Host "Found folder $($OneDriveAppFolder)"
+} else {
+    $OneDriveAppFolder = $null
 }
-$OneDriveVersion = (Get-Item $(Join-Path $OneDriveAppFolder "OneDrive.exe")).VersionInfo.ProductVersion
+
+if ($OneDriveAppFolder) {
+    $OneDriveVersion = (Get-Item $(Join-Path $OneDriveAppFolder "OneDrive.exe")).VersionInfo.ProductVersion
+}
 
 Write-Host "OneDrive version: $($OneDriveVersion)"
 Write-Host "OneDrive application folder: $($OneDriveAppFolder)"
@@ -114,14 +117,15 @@ if ($OneDriveAppFolder -match ((${env:ProgramFiles(x86)}).Replace("\","\\").Repl
         Write-Host "Intialize an OneDrive upgrade..."
         $filepath =  (Join-Path $env:localappdata "Microsoft\OneDrive\OneDriveStandaloneUpdater.exe")
         if (-not (Test-Path  $filepath)) {
-            Write-Error -Message "The file ($($filepath)) does not exist, exit the script with a exit code to make sure it runs again" -Category OperationStopped
-        } 
-        Start-Process -FilePath $filepath -NoNewWindow -Wait
+            Write-Host "The file ($($filepath)) does not exist"
+        } else {
+            #Start updating OneDrive client
+            Start-Process -FilePath $filepath -NoNewWindow -Wait
+        }
     }
 
-    $OneDriveVersion = (Get-Item $(Join-Path $OneDriveAppFolder "OneDrive.exe")).VersionInfo.ProductVersion
-
     #Check if version is updated, and if not already installed in Program files folder
+    $OneDriveVersion = (Get-Item $(Join-Path $OneDriveAppFolder "OneDrive.exe")).VersionInfo.ProductVersion
     if ($OneDriveVersion -ge $MinimumOneDriveVersion) {
         Write-Host "OneDrive client is up to date $($OneDriveVersion), we can install in Program folder"
         $OneDriveSetup = $(Join-Path $OneDriveAppFolder "$($OneDriveVersion)\OneDriveSetup.exe")
