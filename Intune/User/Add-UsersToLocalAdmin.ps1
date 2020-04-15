@@ -5,7 +5,6 @@ $localadminsgroup = (( $objSID2.Translate([System.Security.Principal.NTAccount])
 
 # Add the users that should be in the group
 $accounts = @("AzureAD\account1@domain.com","AzureAD\account2@domain.com")
-#$accounts = @("AzureAD\bak.mg@elev.kungalv.se","AzureAD\account@elev.kungalv.se")
 
 # Add the security principal name to the local administrators group. (used old style of adding group members due to compatibility reasons)
 
