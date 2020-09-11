@@ -1,0 +1,7 @@
+./Device/Vendor/MSFT/Policy/ConfigOperations/ADMXInstall/Harmonie/Policy/HarmonieAdmx01
+String
+Content from admx
+
+./Device/Vendor/MSFT/Policy/Config/Harmonie~Policy~harmonie/UseWindowsCredentialsForBrowserAuthentication
+String
+<enabled/>

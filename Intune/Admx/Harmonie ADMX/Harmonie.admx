@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<policyDefinitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" revision="1.0" schemaVersion="1.0" xmlns="http://schemas.microsoft.com/GroupPolicy/2006/07/PolicyDefinitions">
+  <policyNamespaces>
+    <target prefix="harmonie" namespace="Mainsoft.harmonie" />
+    <using namespace="Microsoft.Policies.Windows" prefix="windows"/>
+  </policyNamespaces>
+  <resources minRequiredRevision="1.0" />
+  <categories>
+    <category name="harmonie" displayName="$(string.harmonie)">
+      <parentCategory ref="windows:harmonie" />
+    </category>
+  </categories>
+  <policies>
+    <policy name="UseWindowsCredentialsForBrowserAuthentication" class="Machine" displayName="$(string.UseWindowsCredentialsForBrowserAuthentication)" explainText="$(string.UseWindowsCredentialsForBrowserAuthenticationText)" key="SOFTWARE\Mainsoft\Prefs\UseWindowsCredentialsForBrowserAuthentication" valueName="">
+      <parentCategory ref="harmonie" />
+      <supportedOn ref="windows:SUPPORTED_WIN7"/>
+      <enabledValue>
+        <string>true</string>
+      </enabledValue>
+      <disabledValue>
+        <string>false</string>
+      </disabledValue>
+    </policy>
+  </policies>
+</policyDefinitions>
