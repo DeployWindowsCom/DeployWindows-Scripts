@@ -7,4 +7,4 @@ do {
 } while ($result -eq "")
 $SecureString = ConvertTo-SecureString $result -AsPlainText -Force 
 
-Add-BitLockerKeyProtector -MountPoint "C:" -Pin $SecureString -TPMandPinProtector
+Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -Pin $SecureString -TPMandPinProtector
