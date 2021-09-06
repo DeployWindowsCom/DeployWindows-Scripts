@@ -45,9 +45,16 @@ $DomainControllers | foreach {
 
 Write-Host "Script done.."
 
-"`"Name`",`"Version`",`"LastLogonDate`"" | Out-File -FilePath .\computers.csv
+"`"Name`",`"Version`",`"LastLogonDate`",`"Raw LastLogonDate`"" | Out-File -FilePath .\computers.csv
 foreach ($computer in $Computers.GetEnumerator()) {
-    "`"$($computer.Name)`",`"$($ComputersVersion[$computer.Name])`",`"$($computer.Value)`"" | Out-File -FilePath .\computers.csv -Append
+    if ($computer.Value) {
+        $rawDate = $computer.Value
+        $parsedDate = [Datetime]::Parse($computer.Value.DateTime).ToString("yyyy-MM-dd hh:mm:ss")
+    } else {
+        $rawDate = $parsedDate = ""
+    }
+    "`"$($computer.Name)`",`"$($ComputersVersion[$computer.Name])`",`"$($parsedDate)`",`"$($rawDate)`"" | Out-File -FilePath .\computers.csv -Append
+    #[Datetime]::Parse($computer.Value.DateTime).ToString("yyyy-MM-dd hh:mm:ss")
 }
 
 #$Computers.GetEnumerator() | ConvertTo-Csv -NoTypeInformation | Out-File -FilePath .\computers.csv
