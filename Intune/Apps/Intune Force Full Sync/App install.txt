@@ -1,0 +1,15 @@
+Note!
+ONLY publish this app as available, NEVER ever publish as required installation
+
+Name
+Force a full Intune synchronization
+
+Install command
+powershell.exe -noprofile -executionpolicy bypass -file .\Start-FullSync.ps1
+
+Uninstall command (does not do anything)
+%comspec% /c
+
+Detection
+Use a custom detection script
+Run-Detection.ps1
