@@ -1,18 +1,45 @@
+<#PSScriptInfo
 
-# This script will configure wireless network settings
-# WIFI1         - Will set this network as Private if not already identified as DomainAuthenticated already
-# WIFIGuest      - Will set this network as Public and manual connect
+.VERSION 1.0
+
+.GUID 
+
+.AUTHOR Mattias Alvbring
+
+.COMPANYNAME DeployWindows.com
+
+.TAGS Windows Intune PowerShell Network Wireless NetworkCategory
+
+.RELEASENOTES
+Version 1.0:  Original
+
+#>
+
+<#
+.SYNOPSIS
+Detection script if network settings is correct
+
+.DESCRIPTION
+ This script will check for 
+ WIFI1         - Will set this network as Private if not already identified as DomainAuthenticated already
+ WIFIGuest      - Will set this network as Public and manual connect
 
 
+.EXAMPLE
+
+#>
+
+$output = ""
 foreach ($wifi in $(Get-NetConnectionProfile -InterfaceAlias Wi-Fi*)) {
-    Write-Host "Found WiFi: $($wifi.Name) with index $($wifi.InterfaceIndex)"
+    $output += "Found WiFi: $($wifi.Name) with index $($wifi.InterfaceIndex)."
 
-    switch -Regex ($wifi.Name) {
+    switch ($wifi.Name) {
         "wifi1" {
             #if network is not identified as DomainAuthenticated set as private
             switch ((Get-NetConnectionProfile -InterfaceIndex $wifi.InterfaceIndex).NetworkCategory) {
                 "Public" {
-                    Write-Host "$($wifi.Name) is identified as public: $($wifi.NetworkCategory). Need fixing"
+                    $output += "$($wifi.Name) is identified as public: $($wifi.NetworkCategory) - Need fixing."
+                    Write-Output $output
                     exit 1
                  }
                 Default {}
@@ -24,7 +51,8 @@ foreach ($wifi in $(Get-NetConnectionProfile -InterfaceAlias Wi-Fi*)) {
                 "Public" {
                  }
                 Default {
-                    Write-Host "$($wifi.Name) is identified as NON-public: $($wifi.NetworkCategory). Need fixing"
+                    $output += "$($wifi.Name) is identified as NON-public: $($wifi.NetworkCategory) - Need fixing."
+                    Write-Output $output
                     exit 1
                 }
             }
@@ -40,12 +68,14 @@ if ($null -ne $ret) {
     if ($ret -match "Connect manually") {
         #Write-Host "$($ssid) is already set to Manual"
     } else {
-        Write-Host "$($ssid) is set to automatic"
+        $output += "$($ssid) is set to automatic."
+        Write-Output $output
         exit 1
     }
 } else {
-    #Write-Host "No WiFi profiles found with name $($ssid)"
+    $output += "No WiFi profiles found with name $($ssid)."
 }
 
 #Successfull exit
+Write-Output $output
 exit 0
