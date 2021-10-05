@@ -1,0 +1,20 @@
+NOTE! 
+Drivers have been downloaded from the print server
+Dont forget to expand the zip file
+
+
+Name
+Print - User
+
+
+Install behavior
+User
+
+Install
+%comspec% /c start /min powershell.exe -noprofile -executionpolicy bypass -file .\install.ps1
+
+Uninstall
+powershell.exe -noprofile -executionpolicy bypass -file .\uninstall.ps1
+
+Detection method
+Powershell script detect.ps1
