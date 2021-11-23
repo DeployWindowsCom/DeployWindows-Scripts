@@ -1,0 +1,26 @@
+Name
+	Printer IntuneTEST
+
+Settings
+    Install behaviour = User
+
+Install command
+    PowerShell.exe -noprofile -WindowStyle Hidden -Executionpolicy bypass -file .\ADM-IntuneTest-Install.ps1
+
+
+Uninstall command
+    PowerShell.exe -noprofile -WindowStyle Hidden -NonInteractive -executionpolicy bypass -file .\ADM-IntuneTest-Uninstall.ps1
+
+Detection
+Run script as 32-bit process on 64-bit clients = NonInteractive
+Custom Script
+    ADM-IntuneTest-Detect.ps1
+
+Dependency
+There is a Dependency on a registry key RestrictDriverInstallationToAdministrators
+Policy to restrict Point and Print settings / From settings catalog
+	Only use Package Point and print = Enabled
+	Package Point and print - Approved servers = Enabled
+		Enter fully qualified server names (Device) = EKS04V04.eskilstuna.se
+	Devices Prevent Users From Installing Printer Drivers When Connecting To Shared Printers = Disabled
+

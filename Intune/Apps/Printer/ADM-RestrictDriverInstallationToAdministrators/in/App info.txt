@@ -1,0 +1,6 @@
+App info
+
+Detect registry
+HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint\
+RestrictDriverInstallationToAdministrators = 0 [DWORD]
+

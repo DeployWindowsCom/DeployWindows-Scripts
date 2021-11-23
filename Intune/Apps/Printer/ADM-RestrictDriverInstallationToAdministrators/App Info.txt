@@ -1,0 +1,23 @@
+Name
+	Pre-Req for printer installation from printserver
+
+
+Settings
+    Install behaviour = System
+
+Install command
+	PowerShell.exe -noprofile -WindowStyle Hidden -Executionpolicy bypass -file .\Install-RestrictDriverInstallationToAdministrators.ps1
+
+
+Uninstall command
+	PowerShell.exe -noprofile -WindowStyle Hidden -Executionpolicy bypass -file .\UnInstall-RestrictDriverInstallationToAdministrators.ps1
+
+Detection
+Manually configure detection rules
+Detection rules
+Registry HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint\
+RestrictDriverInstallationToAdministrators Integer comparision Equals 0
+
+Dependency
+Policy to restrict Point and Print settings
+
