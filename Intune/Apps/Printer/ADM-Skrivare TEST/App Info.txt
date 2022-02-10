@@ -21,6 +21,6 @@ There is a Dependency on a registry key RestrictDriverInstallationToAdministrato
 Policy to restrict Point and Print settings / From settings catalog
 	Only use Package Point and print = Enabled
 	Package Point and print - Approved servers = Enabled
-		Enter fully qualified server names (Device) = EKS04V04.eskilstuna.se
+		Enter fully qualified server names (Device) = printserver.domain.com
 	Devices Prevent Users From Installing Printer Drivers When Connecting To Shared Printers = Disabled
 
