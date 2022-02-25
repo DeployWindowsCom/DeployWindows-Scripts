@@ -1,0 +1,64 @@
+<Branding>
+    <BrandingPath>HKLM:\SOFTWARE\AutopilotBranding</BrandingPath>
+    <BrandingName>Version</BrandingName>
+    <BrandingVersion>1.0</BrandingVersion>
+    <!-- Disable a category with comment tag example below-->
+    <!--<Category>
+        <entity1></entity1>
+    </Category>-->
+
+    <TimeZone>
+        <Id>W. Europe Standard Time</Id>
+    </TimeZone>
+    <RemoveApps>
+        <App>Microsoft.SkypeApp</App>
+        <App>MicrosoftTeams</App>
+        <!-- <App>microsoft.windowscommunicationsapps</App> -->
+        <!-- <App>Microsoft.WindowsFeedbackHub</App> -->
+        <!-- <App>Microsoft.XboxApp</App> -->
+        <!-- <App>Microsoft.YourPhone</App> -->
+    </RemoveApps>
+    <!-- <AddFeatures>
+        <Feature>NetFX3~~~~</Feature>
+    </AddFeatures> -->
+    <AddRegistry>
+        <Item>
+            <Description>Block Edge from creating shortcut on desktop</Description>
+            <RegistryPath>HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer</RegistryPath>
+            <RegistryName>DisableEdgeDesktopShortcutCreation</RegistryName>
+            <RegistryType>REG_DWORD</RegistryType>
+            <RegistryData>1</RegistryData>
+        </Item>
+        <Item>
+            <Description>Set registered user and organization 1/2</Description>
+            <RegistryPath>HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion</RegistryPath>
+            <RegistryName>RegisteredOwner</RegistryName>
+            <RegistryType>REG_SZ</RegistryType>
+            <RegistryData>COMPANY user</RegistryData>
+        </Item>
+        <Item>
+            <Description>Set registered user and organization 2/2</Description>
+            <RegistryPath>HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion</RegistryPath>
+            <RegistryName>RegisteredOrganization</RegistryName>
+            <RegistryType>REG_SZ</RegistryType>
+            <RegistryData>COMPANY</RegistryData>
+        </Item>
+        <Item>
+            <Description>Disable network location fly-out</Description>
+            <RegistryPath>HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion</RegistryPath>
+            <RegistryName></RegistryName>
+            <RegistryType></RegistryType>
+            <RegistryData></RegistryData>
+        </Item>
+    </AddRegistry>
+
+    <DefaultApps>
+        <File>Associations.xml</File>
+    </DefaultApps>
+
+    <OneDriveSetup>
+        <Install>Production</Install>
+        <Production>https://go.microsoft.com/fwlink/?linkid=844652</Production>
+        <Deferred>https://go.microsoft.com/fwlink/?linkid=860987</Deferred>
+    </OneDriveSetup>
+</Branding>
