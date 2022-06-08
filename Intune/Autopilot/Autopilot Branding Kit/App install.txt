@@ -1,0 +1,17 @@
+
+Name
+Autopilot branding
+  PowerShell script, configuration.xml, Associations.xml
+
+Install command
+powershell.exe -noprofile -executionpolicy bypass -file .\AutopilotBranding.ps1
+
+Uninstall command (does not do anything)
+%comspec% /c
+
+Detection
+Registry
+HKLM\SOFTWARE\AutopilotBranding
+Version
+1 # equal
+# CHECK VERSION IN CONFIGURATION.xml

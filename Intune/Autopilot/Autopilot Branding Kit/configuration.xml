@@ -1,14 +1,15 @@
 <Branding>
     <BrandingPath>HKLM:\SOFTWARE\AutopilotBranding</BrandingPath>
     <BrandingName>Version</BrandingName>
-    <BrandingVersion>1.0</BrandingVersion>
+    <BrandingVersion>1</BrandingVersion>
     <!-- Disable a category with comment tag example below-->
     <!--<Category>
         <entity1></entity1>
     </Category>-->
 
     <TimeZone>
-        <Id>W. Europe Standard Time</Id>
+        <!-- <Id>W. Europe Standard Time</Id> -->
+        <SynchronizeTimeService>True</SynchronizeTimeService>
     </TimeZone>
     <RemoveApps>
         <App>Microsoft.SkypeApp</App>
@@ -24,7 +25,7 @@
     <AddRegistry>
         <Item>
             <Description>Block Edge from creating shortcut on desktop</Description>
-            <RegistryPath>HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer</RegistryPath>
+            <RegistryPath>HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer</RegistryPath>
             <RegistryName>DisableEdgeDesktopShortcutCreation</RegistryName>
             <RegistryType>REG_DWORD</RegistryType>
             <RegistryData>1</RegistryData>
@@ -34,27 +35,27 @@
             <RegistryPath>HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion</RegistryPath>
             <RegistryName>RegisteredOwner</RegistryName>
             <RegistryType>REG_SZ</RegistryType>
-            <RegistryData>COMPANY user</RegistryData>
+            <RegistryData>Sanoma User</RegistryData>
         </Item>
         <Item>
             <Description>Set registered user and organization 2/2</Description>
             <RegistryPath>HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion</RegistryPath>
             <RegistryName>RegisteredOrganization</RegistryName>
             <RegistryType>REG_SZ</RegistryType>
-            <RegistryData>COMPANY</RegistryData>
+            <RegistryData>Sanoma</RegistryData>
         </Item>
         <Item>
             <Description>Disable network location fly-out</Description>
-            <RegistryPath>HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion</RegistryPath>
+            <RegistryPath>HKLM:\SYSTEM\CurrentControlSet\Control\Network\NewNetworkWindowOff</RegistryPath>
             <RegistryName></RegistryName>
             <RegistryType></RegistryType>
             <RegistryData></RegistryData>
         </Item>
     </AddRegistry>
 
-    <DefaultApps>
+    <!-- <DefaultApps>
         <File>Associations.xml</File>
-    </DefaultApps>
+    </DefaultApps> -->
 
     <OneDriveSetup>
         <Install>Production</Install>
