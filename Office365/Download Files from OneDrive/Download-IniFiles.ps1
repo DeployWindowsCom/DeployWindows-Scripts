@@ -13,7 +13,9 @@ if (-not (Test-Path -Path $inputfile -ErrorAction SilentlyContinue)) {
 }
 $ResultFile = Join-Path -Path $scriptpath -ChildPath "Result - Download INI.csv"
 
+##############################################################
 #Static variables
+# These needs to be updated what needs to be downloaded
 $StaticFolderUrl = "Documents/Personal"
 $StaticFileName = "Business Cards.docx"
 $TargetFolder = Join-Path -Path $scriptpath -ChildPath "DownloadedFiles"
